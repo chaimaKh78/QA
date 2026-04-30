@@ -1,0 +1,155 @@
+{% extends "base.html" %}
+
+{% block title %}Vol {{ flight.flight_number }} - {{ site_name }}{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row mb-4">
+        <div class="col-12">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'flights:home' %}">Accueil</a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'flights:search_results' %}">Résultats</a></li>
+                    <li class="breadcrumb-item active">Vol {{ flight.flight_number }}</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Détails du vol -->
+    <div class="card mb-4 border-0 shadow-sm">
+        <div class="card-header bg-nouvelair text-white">
+            <div class="d-flex justify-content-between align-items-center">
+                <h4 class="mb-0"><i class="fas fa-plane me-2"></i>Vol {{ flight.flight_number }}</h4>
+                <span class="badge bg-light text-dark">{{ flight.get_status_display }}</span>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="row align-items-center text-center">
+                <div class="col-md-3">
+                    <h3 class="fw-bold text-nouvelair">{{ flight.origin.code }}</h3>
+                    <h6>{{ flight.origin.city }}</h6>
+                    <p class="text-muted">{{ flight.departure_time|date:"d F Y" }}</p>
+                    <h4>{{ flight.departure_time|date:"H:i" }}</h4>
+                </div>
+                <div class="col-md-6">
+                    <div class="d-flex align-items-center justify-content-center">
+                        <div class="me-3">
+                            <small class="text-muted">{{ flight.origin.name|truncatewords:3 }}</small>
+                        </div>
+                        <div class="text-center px-4">
+                            <i class="fas fa-plane fa-2x text-nouvelair mb-2"></i>
+                            <p class="text-muted mb-0">{{ flight.get_duration_display }}</p>
+                            <small class="text-muted">Vol direct</small>
+                        </div>
+                        <div class="ms-3">
+                            <small class="text-muted">{{ flight.destination.name|truncatewords:3 }}</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <h3 class="fw-bold text-nouvelair">{{ flight.destination.code }}</h3>
+                    <h6>{{ flight.destination.city }}</h6>
+                    <p class="text-muted">{{ flight.arrival_time|date:"d F Y" }}</p>
+                    <h4>{{ flight.arrival_time|date:"H:i" }}</h4>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Informations complémentaires -->
+        <div class="col-lg-8">
+            <!-- Détails de l'appareil -->
+            <div class="card mb-4 border-0 shadow-sm">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0"><i class="fas fa-plane-departure me-2"></i>Informations de Vol</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <table class="table table-sm">
+                                <tr><th>Appareil</th><td>{{ flight.aircraft.model_name }}</td></tr>
+                                <tr><th>Immatriculation</th><td>{{ flight.aircraft.registration }}</td></tr>
+                                <tr><th>Sièges totaux</th><td>{{ flight.aircraft.total_seats }}</td></tr>
+                                <tr><th>Repas</th><td><i class="fas fa-utensils text-success me-1"></i>Inclus</td></tr>
+                                <tr><th>Bagage cabine</th><td>10 kg</td></tr>
+                            </table>
+                        </div>
+                        <div class="col-md-6">
+                            <table class="table table-sm">
+                                <tr><th>Places économie</th><td>{{ flight.available_seats_economy }} disponibles</td></tr>
+                                <tr><th>Places affaires</th><td>{{ flight.available_seats_business }} disponibles</td></tr>
+                                <tr><th>Divertissement</th><td><i class="fas fa-tv text-success me-1"></i>Écrans personnels</td></tr>
+                                <tr><th>Wi-Fi</th><td><i class="fas fa-wifi text-success me-1"></i>Disponible</td></tr>
+                                <tr><th>Prise électrique</th><td><i class="fas fa-plug text-success me-1"></i>USB / Prise</td></tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Vols similaires -->
+            {% if similar_flights %}
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0"><i class="fas fa-exchange-alt me-2"></i>Vols Similaires</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        {% for sf in similar_flights %}
+                        <div class="col-md-4">
+                            <div class="card h-100">
+                                <div class="card-body text-center">
+                                    <small class="text-muted">{{ sf.flight_number }}</small>
+                                    <h5>{{ sf.departure_time|date:"H:i" }}</h5>
+                                    <small class="text-muted">{{ sf.get_duration_display }}</small>
+                                    <h5>{{ sf.arrival_time|date:"H:i" }}</h5>
+                                    <strong class="text-nouvelair">{{ sf.get_current_price_economy }} TND</strong>
+                                    <br>
+                                    <a href="{% url 'flights:flight_detail' sf.flight_number %}" class="btn btn-sm btn-outline-nouvelair mt-2">Voir</a>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Panneau de réservation -->
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm position-sticky" style="top: 80px;">
+                <div class="card-header bg-nouvelair text-white">
+                    <h5 class="mb-0"><i class="fas fa-ticket-alt me-2"></i>Réserver ce vol</h5>
+                </div>
+                <div class="card-body">
+                    <table class="table table-borderless mb-3">
+                        <tr>
+                            <td>Passager(s)</td>
+                            <td class="text-end fw-bold">{{ passengers }}</td>
+                        </tr>
+                        <tr>
+                            <td>Classe</td>
+                            <td class="text-end fw-bold">{{ travel_class|title }}</td>
+                        </tr>
+                        <tr>
+                            <td>Prix / passager</td>
+                            <td class="text-end">{{ price_per_passenger }} TND</td>
+                        </tr>
+                        <tr class="border-top">
+                            <td class="pt-2"><strong>Total</strong></td>
+                            <td class="text-end pt-2"><strong class="text-nouvelair fs-4">{{ total_price }} TND</strong></td>
+                        </tr>
+                    </table>
+                    <a href="{% url 'bookings:select_flight' flight.id %}" class="btn btn-nouvelair btn-lg w-100 mb-2">
+                        <i class="fas fa-check-circle me-2"></i>Réserver Maintenant
+                    </a>
+                    <small class="text-muted d-block text-center">Prix final, taxes incluses</small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

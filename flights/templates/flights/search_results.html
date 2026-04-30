@@ -1,0 +1,177 @@
+{% extends "base.html" %}
+
+{% block title %}Résultats de Recherche - {{ site_name }}{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row mb-4">
+        <div class="col-12">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'flights:home' %}">Accueil</a></li>
+                    <li class="breadcrumb-item active">Résultats</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Résumé de recherche -->
+    <div class="card mb-4 border-0 shadow-sm">
+        <div class="card-body bg-nouvelair text-white">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h5 class="mb-2">
+                        <i class="fas fa-plane-departure me-2"></i>
+                        {{ origin.code }} ({{ origin.city }})
+                        <i class="fas fa-arrow-right mx-2"></i>
+                        {{ destination.code }} ({{ destination.city }})
+                    </h5>
+                    <p class="mb-0">
+                        <span class="me-3"><i class="fas fa-calendar me-1"></i>{{ search_params.departure_date|date:"d F Y" }}</span>
+                        <span class="me-3"><i class="fas fa-users me-1"></i>{{ search_params.passengers }} passager(s)</span>
+                        <span><i class="fas fa-ticket-alt me-1"></i>{{ search_params.travel_class|title }}</span>
+                    </p>
+                </div>
+                <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                    <a href="{% url 'flights:home' %}" class="btn btn-outline-light">
+                        <i class="fas fa-redo me-1"></i>Nouvelle recherche
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Résultats -->
+    <div class="row">
+        <div class="col-lg-8">
+            {% if flights %}
+                <p class="text-muted mb-4">{{ flights|length }} vol(s) trouvé(s)</p>
+
+                {% for flight in flights %}
+                <div class="card mb-3 flight-card">
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col-md-3">
+                                <span class="badge bg-nouvelair mb-2">{{ flight.flight_number }}</span>
+                                <p class="mb-1">
+                                    <strong class="display-6">{{ flight.origin.code }}</strong>
+                                </p>
+                                <p class="text-muted mb-0">{{ flight.departure_time|date:"H:i" }}</p>
+                                <small class="text-muted">{{ flight.departure_time|date:"d M Y" }}</small>
+                            </div>
+                            <div class="col-md-3 text-center">
+                                <p class="mb-1"><i class="fas fa-plane text-nouvelair"></i></p>
+                                <p class="text-muted small mb-0">{{ flight.get_duration_display }}</p>
+                                <p class="text-muted small mb-0">Direct</p>
+                            </div>
+                            <div class="col-md-3">
+                                <p class="mb-1">
+                                    <strong class="display-6">{{ flight.destination.code }}</strong>
+                                </p>
+                                <p class="text-muted mb-0">{{ flight.arrival_time|date:"H:i" }}</p>
+                                <small class="text-muted">{{ flight.arrival_time|date:"d M Y" }}</small>
+                            </div>
+                            <div class="col-md-3 text-md-end">
+                                {% if search_params.travel_class == 'business' %}
+                                    <p class="text-nouvelair fw-bold fs-4 mb-1">{{ flight.get_current_price_business }} TND</p>
+                                    <small class="text-muted">Classe Affaires</small>
+                                {% else %}
+                                    <p class="text-nouvelair fw-bold fs-4 mb-1">{{ flight.get_current_price_economy }} TND</p>
+                                    <small class="text-muted">Classe Économie</small>
+                                {% endif %}
+                                <a href="{% url 'bookings:select_flight' flight.id %}" class="btn btn-nouvelair btn-sm mt-2 w-100">
+                                    <i class="fas fa-check-circle me-1"></i>Réserver
+                                </a>
+                            </div>
+                        </div>
+                        <hr class="my-2">
+                        <div class="row text-center text-muted small">
+                            <div class="col">
+                                <i class="fas fa-chair me-1"></i>{{ flight.aircraft.model_name }}
+                            </div>
+                            {% if search_params.travel_class == 'business' %}
+                            <div class="col">
+                                <i class="fas fa-couch me-1"></i>{{ flight.available_seats_business }} places affaires
+                            </div>
+                            {% else %}
+                            <div class="col">
+                                <i class="fas fa-couch me-1"></i>{{ flight.available_seats_economy }} places économie
+                            </div>
+                            {% endif %}
+                            <div class="col">
+                                <i class="fas fa-utensils me-1"></i>Repas inclus
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+
+                <!-- Pagination -->
+                {% if is_paginated %}
+                <nav aria-label="Pagination">
+                    <ul class="pagination justify-content-center">
+                        {% if page_obj.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.previous_page_number }}">&laquo;</a>
+                        </li>
+                        {% endif %}
+                        {% for num in page_obj.paginator.page_range %}
+                        <li class="page-item {% if page_obj.number == num %}active{% endif %}">
+                            <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                        </li>
+                        {% endfor %}
+                        {% if page_obj.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.next_page_number }}">&raquo;</a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+                {% endif %}
+
+            {% else %}
+            <div class="text-center py-5">
+                <i class="fas fa-search fa-3x text-muted mb-4"></i>
+                <h4>Aucun vol trouvé</h4>
+                <p class="text-muted">Aucun vol ne correspond à vos critères de recherche.</p>
+                <a href="{% url 'flights:home' %}" class="btn btn-nouvelair">
+                    <i class="fas fa-redo me-1"></i>Modifier la recherche
+                </a>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Sidebar filtres -->
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-white">
+                    <h6 class="mb-0"><i class="fas fa-filter me-2"></i>Filtres</h6>
+                </div>
+                <div class="card-body">
+                    <h6>Heure de départ</h6>
+                    <div class="form-check mb-1">
+                        <input class="form-check-input" type="checkbox" id="morning">
+                        <label class="form-check-label small" for="morning">Matin (06:00 - 12:00)</label>
+                    </div>
+                    <div class="form-check mb-1">
+                        <input class="form-check-input" type="checkbox" id="afternoon">
+                        <label class="form-check-label small" for="afternoon">Après-midi (12:00 - 18:00)</label>
+                    </div>
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" id="evening">
+                        <label class="form-check-label small" for="evening">Soir (18:00 - 23:59)</label>
+                    </div>
+
+                    <h6>Trier par</h6>
+                    <select class="form-select form-select-sm">
+                        <option>Prix croissant</option>
+                        <option>Prix décroissant</option>
+                        <option>Heure de départ</option>
+                        <option>Durée</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

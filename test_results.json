@@ -1,0 +1,436 @@
+[
+  {
+    "name": "test_booking_count",
+    "module": "accounts.tests.test_models.AccountModelTest.test_booking_count",
+    "description": "Vérifie le compteur de réservations.",
+    "passed": true,
+    "status": "OK"
+  },
+  {
+    "name": "test_profile_auto_creation",
+    "module": "accounts.tests.test_models.AccountModelTest.test_profile_auto_creation",
+    "description": "Vérifie que le profil est créé automatiquement avec l'utilisateur.",
+    "passed": true,
+    "status": "OK"
+  },
+  {
+    "name": "test_profile_full_name",
+    "module": "accounts.tests.test_models.AccountModelTest.test_profile_full_name",
+    "description": "Vérifie la propriété full_name.",
+    "passed": true,
+    "status": "OK"
+  },
+  {
+    "name": "test_profile_without_full_name",
+    "module": "accounts.tests.test_models.AccountModelTest.test_profile_without_full_name",
+    "description": "Vérifie le fallback sur le username.",
+    "passed": true,
+    "status": "OK"
+  },
+  {
+    "name": "test_authenticated_user_redirected_from_register",
+    "module": "accounts.tests.test_models.AccountViewTest.test_authenticated_user_redirected_from_register",
+    "description": "Vérifie la redirection si déjà connecté.",
+    "passed": true,
+    "status": "OK"
+  },
+  {
+    "name": "test_login_invalid",
+    "module": "accounts.tests.test_models.AccountViewTest.test_login_invalid",
+    "description": "Vérifie l'échec de connexion avec mauvais mot de passe.",
+    "passed": true,
+    "status": "OK"
+  },
+  {
+    "name": "test_login_page",
+    "module": "accounts.tests.test_models.AccountViewTest.test_login_page",
+    "description": "Vérifie l'accès à la page de connexion.",
+    "passed": true,
+    "status": "OK"
+  },
+  {
+    "name": "test_login_success",
+    "module": "accounts.tests.test_models.AccountViewTest.test_login_success",
+    "description": "Vérifie la connexion réussie.",
+    "passed": true,
+    "status": "OK"
+  },
+  {
+    "name": "test_logout",
+    "module": "accounts.tests.test_models.AccountViewTest.test_logout",
+    "description": "Vérifie la déconnexion.",
+    "passed": true,
+    "status": "OK"
+  },
+  {
+    "name": "test_profile_authenticated",
+    "module": "accounts.tests.test_models.AccountViewTest.test_profile_authenticated",
+    "description": "Vérifie l'accès au profil quand connecté.",
+    "passed": true,
+    "status": "OK"
+  },
+  {
+    "name": "test_profile_requires_login",
+    "module": "accounts.tests.test_models.AccountViewTest.test_profile_requires_login",
+    "description": "Vérifie que le profil nécessite une connexion.",
+    "passed": true,
+    "status": "OK"
+  },
+  {
+    "name": "test_profile_update",
+    "module": "accounts.tests.test_models.AccountViewTest.test_profile_update",
+    "description": "Vérifie la mise à jour du profil.",
+    "passed": true,
+    "status": "OK"
+  },
+  {
+    "name": "test_register_duplicate_email",
+    "module": "accounts.tests.test_models.AccountViewTest.test_register_duplicate_email",
+    "description": "Vérifie qu'on ne peut pas utiliser un email en doublon.",
+    "passed": true,
+    "status": "OK"
+  },
+  {
+    "name": "test_register_page",
+    "module": "accounts.tests.test_models.AccountViewTest.test_register_page",
+    "description": "Vérifie l'accès à la page d'inscription.",
+    "passed": true,
+    "status": "OK"
+  },
+  {
+    "name": "test_register_success",
+    "module": "accounts.tests.test_models.AccountViewTest.test_register_success",
+    "description": "Vérifie l'inscription réussie.",
+    "passed": true,
+    "status": "OK"
+  },
+  {
+    "name": "test_booking_creation",
+    "module": "bookings.tests.test_models.BookingModelTest.test_booking_creation",
+    "description": "Vérifie la création correcte d'une réservation.",
+    "passed": true,
+    "status": "OK"
+  },
+  {
+    "name": "test_booking_str",
+    "module": "bookings.tests.test_models.BookingModelTest.test_booking_str",
+    "description": "Vérifie la représentation string.",
+    "passed": true,
+    "status": "OK"
+  },
+  {
+    "name": "test_passenger_creation",
+    "module": "bookings.tests.test_models.BookingModelTest.test_passenger_creation",
+    "description": "Vérifie la création d'un passager.",
+    "passed": true,
+    "status": "OK"
+  },
+  {
+    "name": "test_payment_creation",
+    "module": "bookings.tests.test_models.BookingModelTest.test_payment_creation",
+    "description": "Vérifie la création d'un paiement.",
+    "passed": true,
+    "status": "OK"
+  },
+  {
+    "name": "test_booking_cancellation",
+    "module": "bookings.tests.test_models.BookingViewTest.test_booking_cancellation",
+    "description": "Vérifie l'annulation d'une réservation.",
+    "passed": true,
+    "status": "OK"
+  },
+  {
+    "name": "test_booking_lookup_page",
+    "module": "bookings.tests.test_models.BookingViewTest.test_booking_lookup_page",
+    "description": "Vérifie l'accès à la page de recherche de réservation.",
+    "passed": true,
+    "status": "OK"
+  },
+  {
+    "name": "test_my_bookings_authenticated",
+    "module": "bookings.tests.test_models.BookingViewTest.test_my_bookings_authenticated",
+    "description": "Vérifie l'accès aux réservations quand connecté.",
+    "passed": true,
+    "status": "OK"
+  },
+  {
+    "name": "test_my_bookings_requires_login",
+    "module": "bookings.tests.test_models.BookingViewTest.test_my_bookings_requires_login",
+    "description": "Vérifie que mes réservations nécessite une connexion.",
+    "passed": true,
+    "status": "OK"
+  },
+  {
+    "name": "test_select_flight_redirect",
+    "module": "bookings.tests.test_models.BookingViewTest.test_select_flight_redirect",
+    "description": "Vérifie la sélection de vol.",
+    "passed": true,
+    "status": "OK"
+  },
+  {
+    "name": "test_destination_creation",
+    "module": "destinations.tests.test_models.DestinationModelTest.test_destination_creation",
+    "description": "Vérifie la création correcte d'une destination.",
+    "passed": true,
+    "status": "OK"
+  },
+  {
+    "name": "test_destination_str",
+    "module": "destinations.tests.test_models.DestinationModelTest.test_destination_str",
+    "description": "Vérifie la représentation string.",
+    "passed": true,
+    "status": "OK"
+  },
+  {
+    "name": "test_get_lowest_price",
+    "module": "destinations.tests.test_models.DestinationModelTest.test_get_lowest_price",
+    "description": "Vérifie la méthode de prix le plus bas.",
+    "passed": true,
+    "status": "OK"
+  },
+  {
+    "name": "test_unique_slug",
+    "module": "destinations.tests.test_models.DestinationModelTest.test_unique_slug",
+    "description": "Vérifie l'unicité du slug.",
+    "passed": true,
+    "status": "OK"
+  },
+  {
+    "name": "test_review_creation",
+    "module": "destinations.tests.test_models.DestinationReviewTest.test_review_creation",
+    "description": "Vérifie la création d'un avis.",
+    "passed": true,
+    "status": "OK"
+  },
+  {
+    "name": "test_unique_review_per_user",
+    "module": "destinations.tests.test_models.DestinationReviewTest.test_unique_review_per_user",
+    "description": "Vérifie qu'un utilisateur ne peut laisser qu'un avis par destination.",
+    "passed": true,
+    "status": "OK"
+  },
+  {
+    "name": "test_destination_detail",
+    "module": "destinations.tests.test_models.DestinationViewTest.test_destination_detail",
+    "description": "Vérifie l'accès au détail d'une destination.",
+    "passed": true,
+    "status": "OK"
+  },
+  {
+    "name": "test_destination_list",
+    "module": "destinations.tests.test_models.DestinationViewTest.test_destination_list",
+    "description": "Vérifie l'accès à la liste des destinations.",
+    "passed": true,
+    "status": "OK"
+  },
+  {
+    "name": "test_aircraft_creation",
+    "module": "flights.tests.test_models.AircraftModelTest.test_aircraft_creation",
+    "description": "Vérifie la création correcte d'un aéronef.",
+    "passed": true,
+    "status": "OK"
+  },
+  {
+    "name": "test_aircraft_str",
+    "module": "flights.tests.test_models.AircraftModelTest.test_aircraft_str",
+    "description": "Vérifie la représentation string.",
+    "passed": true,
+    "status": "OK"
+  },
+  {
+    "name": "test_seats_sum",
+    "module": "flights.tests.test_models.AircraftModelTest.test_seats_sum",
+    "description": "Vérifie que économie + affaires = total.",
+    "passed": true,
+    "status": "OK"
+  },
+  {
+    "name": "test_airport_creation",
+    "module": "flights.tests.test_models.AirportModelTest.test_airport_creation",
+    "description": "Vérifie la création correcte d'un aéroport.",
+    "passed": true,
+    "status": "OK"
+  },
+  {
+    "name": "test_airport_ordering",
+    "module": "flights.tests.test_models.AirportModelTest.test_airport_ordering",
+    "description": "Vérifie l'ordre de tri des aéroports par code.",
+    "passed": true,
+    "status": "OK"
+  },
+  {
+    "name": "test_airport_str_representation",
+    "module": "flights.tests.test_models.AirportModelTest.test_airport_str_representation",
+    "description": "Vérifie la représentation string de l'aéroport.",
+    "passed": true,
+    "status": "OK"
+  },
+  {
+    "name": "test_airport_unique_code",
+    "module": "flights.tests.test_models.AirportModelTest.test_airport_unique_code",
+    "description": "Vérifie que le code IATA est unique.",
+    "passed": true,
+    "status": "OK"
+  },
+  {
+    "name": "test_flight_creation",
+    "module": "flights.tests.test_models.FlightModelTest.test_flight_creation",
+    "description": "Vérifie la création correcte d'un vol.",
+    "passed": true,
+    "status": "OK"
+  },
+  {
+    "name": "test_flight_duration_auto_calculated",
+    "module": "flights.tests.test_models.FlightModelTest.test_flight_duration_auto_calculated",
+    "description": "Vérifie que la durée est calculée automatiquement.",
+    "passed": true,
+    "status": "OK"
+  },
+  {
+    "name": "test_flight_search",
+    "module": "flights.tests.test_models.FlightModelTest.test_flight_search",
+    "description": "Vérifie la méthode de recherche de vols.",
+    "passed": true,
+    "status": "OK"
+  },
+  {
+    "name": "test_flight_search_no_results",
+    "module": "flights.tests.test_models.FlightModelTest.test_flight_search_no_results",
+    "description": "Vérifie que la recherche renvoie vide si pas de résultats.",
+    "passed": true,
+    "status": "OK"
+  },
+  {
+    "name": "test_flight_str",
+    "module": "flights.tests.test_models.FlightModelTest.test_flight_str",
+    "description": "Vérifie la représentation string du vol.",
+    "passed": true,
+    "status": "OK"
+  },
+  {
+    "name": "test_price_methods",
+    "module": "flights.tests.test_models.FlightModelTest.test_price_methods",
+    "description": "Vérifie les méthodes de prix.",
+    "passed": true,
+    "status": "OK"
+  },
+  {
+    "name": "test_airport_autocomplete",
+    "module": "flights.tests.test_models.FlightViewTest.test_airport_autocomplete",
+    "description": "Vérifie l'API d'autocomplétion des aéroports.",
+    "passed": true,
+    "status": "OK"
+  },
+  {
+    "name": "test_airport_list_view",
+    "module": "flights.tests.test_models.FlightViewTest.test_airport_list_view",
+    "description": "Vérifie la page de liste des aéroports.",
+    "passed": true,
+    "status": "OK"
+  },
+  {
+    "name": "test_flight_detail_view",
+    "module": "flights.tests.test_models.FlightViewTest.test_flight_detail_view",
+    "description": "Vérifie la page de détail d'un vol.",
+    "passed": true,
+    "status": "OK"
+  },
+  {
+    "name": "test_home_view_contains_form",
+    "module": "flights.tests.test_models.FlightViewTest.test_home_view_contains_form",
+    "description": "Vérifie que la page d'accueil contient le formulaire de recherche.",
+    "passed": true,
+    "status": "OK"
+  },
+  {
+    "name": "test_home_view_status",
+    "module": "flights.tests.test_models.FlightViewTest.test_home_view_status",
+    "description": "Vérifie que la page d'accueil est accessible.",
+    "passed": true,
+    "status": "OK"
+  },
+  {
+    "name": "test_search_flight_post",
+    "module": "flights.tests.test_models.FlightViewTest.test_search_flight_post",
+    "description": "Vérifie la soumission du formulaire de recherche.",
+    "passed": true,
+    "status": "OK"
+  },
+  {
+    "name": "test_search_same_airport_error",
+    "module": "flights.tests.test_models.FlightViewTest.test_search_same_airport_error",
+    "description": "Vérifie qu'on ne peut pas chercher avec le même aéroport.",
+    "passed": true,
+    "status": "OK"
+  },
+  {
+    "name": "test_promotion_creation",
+    "module": "promotions.tests.test_models.PromotionModelTest.test_promotion_creation",
+    "description": "Vérifie la création correcte d'une promotion.",
+    "passed": true,
+    "status": "OK"
+  },
+  {
+    "name": "test_promotion_expired",
+    "module": "promotions.tests.test_models.PromotionModelTest.test_promotion_expired",
+    "description": "Vérifie qu'une promotion expirée n'est pas valide.",
+    "passed": true,
+    "status": "OK"
+  },
+  {
+    "name": "test_promotion_is_valid",
+    "module": "promotions.tests.test_models.PromotionModelTest.test_promotion_is_valid",
+    "description": "Vérifie la validité d'une promotion active.",
+    "passed": true,
+    "status": "OK"
+  },
+  {
+    "name": "test_promotion_max_uses_reached",
+    "module": "promotions.tests.test_models.PromotionModelTest.test_promotion_max_uses_reached",
+    "description": "Vérifie qu'une promotion épuisée n'est pas valide.",
+    "passed": true,
+    "status": "OK"
+  },
+  {
+    "name": "test_remaining_uses",
+    "module": "promotions.tests.test_models.PromotionModelTest.test_remaining_uses",
+    "description": "Vérifie le calcul des utilisations restantes.",
+    "passed": true,
+    "status": "OK"
+  },
+  {
+    "name": "test_newsletter_subscribe_duplicate",
+    "module": "promotions.tests.test_models.PromotionViewTest.test_newsletter_subscribe_duplicate",
+    "description": "Vérifie qu'on ne peut pas s'inscrire deux fois.",
+    "passed": true,
+    "status": "OK"
+  },
+  {
+    "name": "test_newsletter_subscribe_missing_email",
+    "module": "promotions.tests.test_models.PromotionViewTest.test_newsletter_subscribe_missing_email",
+    "description": "Vérifie que l'email est requis.",
+    "passed": true,
+    "status": "OK"
+  },
+  {
+    "name": "test_newsletter_subscribe_success",
+    "module": "promotions.tests.test_models.PromotionViewTest.test_newsletter_subscribe_success",
+    "description": "Vérifie l'inscription à la newsletter.",
+    "passed": true,
+    "status": "OK"
+  },
+  {
+    "name": "test_promotion_detail",
+    "module": "promotions.tests.test_models.PromotionViewTest.test_promotion_detail",
+    "description": "Vérifie l'accès au détail d'une promotion.",
+    "passed": true,
+    "status": "OK"
+  },
+  {
+    "name": "test_promotion_list",
+    "module": "promotions.tests.test_models.PromotionViewTest.test_promotion_list",
+    "description": "Vérifie l'accès à la liste des promotions.",
+    "passed": true,
+    "status": "OK"
+  }
+]

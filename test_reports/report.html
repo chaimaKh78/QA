@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"><title>NouvelAir - Rapport de Tests</title>
+<style>
+*{box-sizing:border-box}body{font-family:'Segoe UI',Arial,sans-serif;margin:0;padding:30px;background:#f0f2f5}
+.header{background:linear-gradient(135deg,#1a237e,#0d47a1,#01579b);color:#fff;padding:35px;border-radius:14px;margin-bottom:25px;box-shadow:0 4px 15px rgba(0,0,0,.2)}
+.header h1{margin:0 0 8px;font-size:28px}.header p{margin:0;opacity:.85;font-size:15px}
+.timestamp{text-align:right;color:#888;margin-bottom:15px;font-size:14px}
+.summary{display:flex;gap:18px;margin-bottom:25px;flex-wrap:wrap}
+.stat{padding:22px 35px;border-radius:12px;color:#fff;font-weight:700;font-size:20px;box-shadow:0 3px 10px rgba(0,0,0,.15);min-width:130px;text-align:center}
+.stat .label{font-size:13px;font-weight:400;opacity:.9;margin-bottom:4px}
+.stat.total{background:linear-gradient(135deg,#1565c0,#1976d2)}
+.stat.pass{background:linear-gradient(135deg,#2e7d32,#43a047)}
+.stat.fail{background:linear-gradient(135deg,#c62828,#e53935)}
+.stat.error{background:linear-gradient(135deg,#e65100,#f57c00)}
+.progress{height:8px;background:#e0e0e0;border-radius:4px;margin-bottom:25px;overflow:hidden}
+.progress .bar{height:100%;background:linear-gradient(90deg,#2e7d32,#43a047);border-radius:4px}
+table{width:100%;border-collapse:collapse;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,.08)}
+th{background:#1a237e;color:#fff;padding:14px 18px;text-align:left;font-size:14px}
+td{padding:12px 18px;border-bottom:1px solid #f0f0f0;font-size:14px}
+tr:last-child td{border-bottom:none}tr:hover{background:#f8f9ff}
+.badge{font-weight:700;padding:5px 14px;border-radius:20px;color:#fff;font-size:12px;text-transform:uppercase;letter-spacing:.5px}
+.badge.ok{background:#2e7d32}.badge.FAIL{background:#c62828}.badge.ERROR{background:#e65100}
+.desc{color:#666;font-size:13px}.footer{text-align:center;color:#aaa;margin-top:25px;font-size:13px}
+</style></head><body>
+<div class="header"><h1>NouvelAir - Rapport de Tests</h1><p>Resultats des tests automatiques</p></div>
+<div class="timestamp">Genere le 21/04/2026 a 16:27:10</div>
+<div class="summary">
+<div class="stat total"><div class="label">TOTAL</div>62</div>
+<div class="stat pass"><div class="label">PASS</div>62</div>
+<div class="stat fail"><div class="label">FAIL</div>0</div>
+<div class="stat error"><div class="label">ERROR</div>0</div>
+</div>
+<div class="progress"><div class="bar" style="width:100%"></div></div>
+<table><tr><th style="width:80px">Status</th><th>Module</th><th>Test</th><th>Description</th></tr><tr>
+<td><span class="badge ok">ok</span></td>
+<td>accounts <span style="color:#aaa">.test_booking_count</span></td>
+<td><code>test_booking_count</code></td>
+<td class="desc">Vérifie le compteur de réservations.</td></tr><tr>
+<td><span class="badge ok">ok</span></td>
+<td>accounts <span style="color:#aaa">.test_profile_auto_creation</span></td>
+<td><code>test_profile_auto_creation</code></td>
+<td class="desc">Vérifie que le profil est créé automatiquement avec l'utilisateur.</td></tr><tr>
+<td><span class="badge ok">ok</span></td>
+<td>accounts <span style="color:#aaa">.test_profile_full_name</span></td>
+<td><code>test_profile_full_name</code></td>
+<td class="desc">Vérifie la propriété full_name.</td></tr><tr>
+<td><span class="badge ok">ok</span></td>
+<td>accounts <span style="color:#aaa">.test_profile_without_full_name</span></td>
+<td><code>test_profile_without_full_name</code></td>
+<td class="desc">Vérifie le fallback sur le username.</td></tr><tr>
+<td><span class="badge ok">ok</span></td>
+<td>accounts <span style="color:#aaa">.test_authenticated_user_redirected_from_register</span></td>
+<td><code>test_authenticated_user_redirected_from_register</code></td>
+<td class="desc">Vérifie la redirection si déjà connecté.</td></tr><tr>
+<td><span class="badge ok">ok</span></td>
+<td>accounts <span style="color:#aaa">.test_login_invalid</span></td>
+<td><code>test_login_invalid</code></td>
+<td class="desc">Vérifie l'échec de connexion avec mauvais mot de passe.</td></tr><tr>
+<td><span class="badge ok">ok</span></td>
+<td>accounts <span style="color:#aaa">.test_login_page</span></td>
+<td><code>test_login_page</code></td>
+<td class="desc">Vérifie l'accès à la page de connexion.</td></tr><tr>
+<td><span class="badge ok">ok</span></td>
+<td>accounts <span style="color:#aaa">.test_login_success</span></td>
+<td><code>test_login_success</code></td>
+<td class="desc">Vérifie la connexion réussie.</td></tr><tr>
+<td><span class="badge ok">ok</span></td>
+<td>accounts <span style="color:#aaa">.test_logout</span></td>
+<td><code>test_logout</code></td>
+<td class="desc">Vérifie la déconnexion.</td></tr><tr>
+<td><span class="badge ok">ok</span></td>
+<td>accounts <span style="color:#aaa">.test_profile_authenticated</span></td>
+<td><code>test_profile_authenticated</code></td>
+<td class="desc">Vérifie l'accès au profil quand connecté.</td></tr><tr>
+<td><span class="badge ok">ok</span></td>
+<td>accounts <span style="color:#aaa">.test_profile_requires_login</span></td>
+<td><code>test_profile_requires_login</code></td>
+<td class="desc">Vérifie que le profil nécessite une connexion.</td></tr><tr>
+<td><span class="badge ok">ok</span></td>
+<td>accounts <span style="color:#aaa">.test_profile_update</span></td>
+<td><code>test_profile_update</code></td>
+<td class="desc">Vérifie la mise à jour du profil.</td></tr><tr>
+<td><span class="badge ok">ok</span></td>
+<td>accounts <span style="color:#aaa">.test_register_duplicate_email</span></td>
+<td><code>test_register_duplicate_email</code></td>
+<td class="desc">Vérifie qu'on ne peut pas utiliser un email en doublon.</td></tr><tr>
+<td><span class="badge ok">ok</span></td>
+<td>accounts <span style="color:#aaa">.test_register_page</span></td>
+<td><code>test_register_page</code></td>
+<td class="desc">Vérifie l'accès à la page d'inscription.</td></tr><tr>
+<td><span class="badge ok">ok</span></td>
+<td>accounts <span style="color:#aaa">.test_register_success</span></td>
+<td><code>test_register_success</code></td>
+<td class="desc">Vérifie l'inscription réussie.</td></tr><tr>
+<td><span class="badge ok">ok</span></td>
+<td>bookings <span style="color:#aaa">.test_booking_creation</span></td>
+<td><code>test_booking_creation</code></td>
+<td class="desc">Vérifie la création correcte d'une réservation.</td></tr><tr>
+<td><span class="badge ok">ok</span></td>
+<td>bookings <span style="color:#aaa">.test_booking_str</span></td>
+<td><code>test_booking_str</code></td>
+<td class="desc">Vérifie la représentation string.</td></tr><tr>
+<td><span class="badge ok">ok</span></td>
+<td>bookings <span style="color:#aaa">.test_passenger_creation</span></td>
+<td><code>test_passenger_creation</code></td>
+<td class="desc">Vérifie la création d'un passager.</td></tr><tr>
+<td><span class="badge ok">ok</span></td>
+<td>bookings <span style="color:#aaa">.test_payment_creation</span></td>
+<td><code>test_payment_creation</code></td>
+<td class="desc">Vérifie la création d'un paiement.</td></tr><tr>
+<td><span class="badge ok">ok</span></td>
+<td>bookings <span style="color:#aaa">.test_booking_cancellation</span></td>
+<td><code>test_booking_cancellation</code></td>
+<td class="desc">Vérifie l'annulation d'une réservation.</td></tr><tr>
+<td><span class="badge ok">ok</span></td>
+<td>bookings <span style="color:#aaa">.test_booking_lookup_page</span></td>
+<td><code>test_booking_lookup_page</code></td>
+<td class="desc">Vérifie l'accès à la page de recherche de réservation.</td></tr><tr>
+<td><span class="badge ok">ok</span></td>
+<td>bookings <span style="color:#aaa">.test_my_bookings_authenticated</span></td>
+<td><code>test_my_bookings_authenticated</code></td>
+<td class="desc">Vérifie l'accès aux réservations quand connecté.</td></tr><tr>
+<td><span class="badge ok">ok</span></td>
+<td>bookings <span style="color:#aaa">.test_my_bookings_requires_login</span></td>
+<td><code>test_my_bookings_requires_login</code></td>
+<td class="desc">Vérifie que mes réservations nécessite une connexion.</td></tr><tr>
+<td><span class="badge ok">ok</span></td>
+<td>bookings <span style="color:#aaa">.test_select_flight_redirect</span></td>
+<td><code>test_select_flight_redirect</code></td>
+<td class="desc">Vérifie la sélection de vol.</td></tr><tr>
+<td><span class="badge ok">ok</span></td>
+<td>destinations <span style="color:#aaa">.test_destination_creation</span></td>
+<td><code>test_destination_creation</code></td>
+<td class="desc">Vérifie la création correcte d'une destination.</td></tr><tr>
+<td><span class="badge ok">ok</span></td>
+<td>destinations <span style="color:#aaa">.test_destination_str</span></td>
+<td><code>test_destination_str</code></td>
+<td class="desc">Vérifie la représentation string.</td></tr><tr>
+<td><span class="badge ok">ok</span></td>
+<td>destinations <span style="color:#aaa">.test_get_lowest_price</span></td>
+<td><code>test_get_lowest_price</code></td>
+<td class="desc">Vérifie la méthode de prix le plus bas.</td></tr><tr>
+<td><span class="badge ok">ok</span></td>
+<td>destinations <span style="color:#aaa">.test_unique_slug</span></td>
+<td><code>test_unique_slug</code></td>
+<td class="desc">Vérifie l'unicité du slug.</td></tr><tr>
+<td><span class="badge ok">ok</span></td>
+<td>destinations <span style="color:#aaa">.test_review_creation</span></td>
+<td><code>test_review_creation</code></td>
+<td class="desc">Vérifie la création d'un avis.</td></tr><tr>
+<td><span class="badge ok">ok</span></td>
+<td>destinations <span style="color:#aaa">.test_unique_review_per_user</span></td>
+<td><code>test_unique_review_per_user</code></td>
+<td class="desc">Vérifie qu'un utilisateur ne peut laisser qu'un avis par destination.</td></tr><tr>
+<td><span class="badge ok">ok</span></td>
+<td>destinations <span style="color:#aaa">.test_destination_detail</span></td>
+<td><code>test_destination_detail</code></td>
+<td class="desc">Vérifie l'accès au détail d'une destination.</td></tr><tr>
+<td><span class="badge ok">ok</span></td>
+<td>destinations <span style="color:#aaa">.test_destination_list</span></td>
+<td><code>test_destination_list</code></td>
+<td class="desc">Vérifie l'accès à la liste des destinations.</td></tr><tr>
+<td><span class="badge ok">ok</span></td>
+<td>flights <span style="color:#aaa">.test_aircraft_creation</span></td>
+<td><code>test_aircraft_creation</code></td>
+<td class="desc">Vérifie la création correcte d'un aéronef.</td></tr><tr>
+<td><span class="badge ok">ok</span></td>
+<td>flights <span style="color:#aaa">.test_aircraft_str</span></td>
+<td><code>test_aircraft_str</code></td>
+<td class="desc">Vérifie la représentation string.</td></tr><tr>
+<td><span class="badge ok">ok</span></td>
+<td>flights <span style="color:#aaa">.test_seats_sum</span></td>
+<td><code>test_seats_sum</code></td>
+<td class="desc">Vérifie que économie + affaires = total.</td></tr><tr>
+<td><span class="badge ok">ok</span></td>
+<td>flights <span style="color:#aaa">.test_airport_creation</span></td>
+<td><code>test_airport_creation</code></td>
+<td class="desc">Vérifie la création correcte d'un aéroport.</td></tr><tr>
+<td><span class="badge ok">ok</span></td>
+<td>flights <span style="color:#aaa">.test_airport_ordering</span></td>
+<td><code>test_airport_ordering</code></td>
+<td class="desc">Vérifie l'ordre de tri des aéroports par code.</td></tr><tr>
+<td><span class="badge ok">ok</span></td>
+<td>flights <span style="color:#aaa">.test_airport_str_representation</span></td>
+<td><code>test_airport_str_representation</code></td>
+<td class="desc">Vérifie la représentation string de l'aéroport.</td></tr><tr>
+<td><span class="badge ok">ok</span></td>
+<td>flights <span style="color:#aaa">.test_airport_unique_code</span></td>
+<td><code>test_airport_unique_code</code></td>
+<td class="desc">Vérifie que le code IATA est unique.</td></tr><tr>
+<td><span class="badge ok">ok</span></td>
+<td>flights <span style="color:#aaa">.test_flight_creation</span></td>
+<td><code>test_flight_creation</code></td>
+<td class="desc">Vérifie la création correcte d'un vol.</td></tr><tr>
+<td><span class="badge ok">ok</span></td>
+<td>flights <span style="color:#aaa">.test_flight_duration_auto_calculated</span></td>
+<td><code>test_flight_duration_auto_calculated</code></td>
+<td class="desc">Vérifie que la durée est calculée automatiquement.</td></tr><tr>
+<td><span class="badge ok">ok</span></td>
+<td>flights <span style="color:#aaa">.test_flight_search</span></td>
+<td><code>test_flight_search</code></td>
+<td class="desc">Vérifie la méthode de recherche de vols.</td></tr><tr>
+<td><span class="badge ok">ok</span></td>
+<td>flights <span style="color:#aaa">.test_flight_search_no_results</span></td>
+<td><code>test_flight_search_no_results</code></td>
+<td class="desc">Vérifie que la recherche renvoie vide si pas de résultats.</td></tr><tr>
+<td><span class="badge ok">ok</span></td>
+<td>flights <span style="color:#aaa">.test_flight_str</span></td>
+<td><code>test_flight_str</code></td>
+<td class="desc">Vérifie la représentation string du vol.</td></tr><tr>
+<td><span class="badge ok">ok</span></td>
+<td>flights <span style="color:#aaa">.test_price_methods</span></td>
+<td><code>test_price_methods</code></td>
+<td class="desc">Vérifie les méthodes de prix.</td></tr><tr>
+<td><span class="badge ok">ok</span></td>
+<td>flights <span style="color:#aaa">.test_airport_autocomplete</span></td>
+<td><code>test_airport_autocomplete</code></td>
+<td class="desc">Vérifie l'API d'autocomplétion des aéroports.</td></tr><tr>
+<td><span class="badge ok">ok</span></td>
+<td>flights <span style="color:#aaa">.test_airport_list_view</span></td>
+<td><code>test_airport_list_view</code></td>
+<td class="desc">Vérifie la page de liste des aéroports.</td></tr><tr>
+<td><span class="badge ok">ok</span></td>
+<td>flights <span style="color:#aaa">.test_flight_detail_view</span></td>
+<td><code>test_flight_detail_view</code></td>
+<td class="desc">Vérifie la page de détail d'un vol.</td></tr><tr>
+<td><span class="badge ok">ok</span></td>
+<td>flights <span style="color:#aaa">.test_home_view_contains_form</span></td>
+<td><code>test_home_view_contains_form</code></td>
+<td class="desc">Vérifie que la page d'accueil contient le formulaire de recherche.</td></tr><tr>
+<td><span class="badge ok">ok</span></td>
+<td>flights <span style="color:#aaa">.test_home_view_status</span></td>
+<td><code>test_home_view_status</code></td>
+<td class="desc">Vérifie que la page d'accueil est accessible.</td></tr><tr>
+<td><span class="badge ok">ok</span></td>
+<td>flights <span style="color:#aaa">.test_search_flight_post</span></td>
+<td><code>test_search_flight_post</code></td>
+<td class="desc">Vérifie la soumission du formulaire de recherche.</td></tr><tr>
+<td><span class="badge ok">ok</span></td>
+<td>flights <span style="color:#aaa">.test_search_same_airport_error</span></td>
+<td><code>test_search_same_airport_error</code></td>
+<td class="desc">Vérifie qu'on ne peut pas chercher avec le même aéroport.</td></tr><tr>
+<td><span class="badge ok">ok</span></td>
+<td>promotions <span style="color:#aaa">.test_promotion_creation</span></td>
+<td><code>test_promotion_creation</code></td>
+<td class="desc">Vérifie la création correcte d'une promotion.</td></tr><tr>
+<td><span class="badge ok">ok</span></td>
+<td>promotions <span style="color:#aaa">.test_promotion_expired</span></td>
+<td><code>test_promotion_expired</code></td>
+<td class="desc">Vérifie qu'une promotion expirée n'est pas valide.</td></tr><tr>
+<td><span class="badge ok">ok</span></td>
+<td>promotions <span style="color:#aaa">.test_promotion_is_valid</span></td>
+<td><code>test_promotion_is_valid</code></td>
+<td class="desc">Vérifie la validité d'une promotion active.</td></tr><tr>
+<td><span class="badge ok">ok</span></td>
+<td>promotions <span style="color:#aaa">.test_promotion_max_uses_reached</span></td>
+<td><code>test_promotion_max_uses_reached</code></td>
+<td class="desc">Vérifie qu'une promotion épuisée n'est pas valide.</td></tr><tr>
+<td><span class="badge ok">ok</span></td>
+<td>promotions <span style="color:#aaa">.test_remaining_uses</span></td>
+<td><code>test_remaining_uses</code></td>
+<td class="desc">Vérifie le calcul des utilisations restantes.</td></tr><tr>
+<td><span class="badge ok">ok</span></td>
+<td>promotions <span style="color:#aaa">.test_newsletter_subscribe_duplicate</span></td>
+<td><code>test_newsletter_subscribe_duplicate</code></td>
+<td class="desc">Vérifie qu'on ne peut pas s'inscrire deux fois.</td></tr><tr>
+<td><span class="badge ok">ok</span></td>
+<td>promotions <span style="color:#aaa">.test_newsletter_subscribe_missing_email</span></td>
+<td><code>test_newsletter_subscribe_missing_email</code></td>
+<td class="desc">Vérifie que l'email est requis.</td></tr><tr>
+<td><span class="badge ok">ok</span></td>
+<td>promotions <span style="color:#aaa">.test_newsletter_subscribe_success</span></td>
+<td><code>test_newsletter_subscribe_success</code></td>
+<td class="desc">Vérifie l'inscription à la newsletter.</td></tr><tr>
+<td><span class="badge ok">ok</span></td>
+<td>promotions <span style="color:#aaa">.test_promotion_detail</span></td>
+<td><code>test_promotion_detail</code></td>
+<td class="desc">Vérifie l'accès au détail d'une promotion.</td></tr><tr>
+<td><span class="badge ok">ok</span></td>
+<td>promotions <span style="color:#aaa">.test_promotion_list</span></td>
+<td><code>test_promotion_list</code></td>
+<td class="desc">Vérifie l'accès à la liste des promotions.</td></tr></table><div class="footer">NouvelAir Test Suite &copy; 2026</div></body></html>

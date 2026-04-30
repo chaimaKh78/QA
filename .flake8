@@ -1,0 +1,35 @@
+# =============================================================================
+# Configuration Flake8 - NouvelAir
+# =============================================================================
+# Règles de linting pour le projet NouvelAir.
+# Documentation: https://flake8.pycqa.org/en/latest/
+# =============================================================================
+
+[flake8]
+max-line-length = 120
+exclude =
+    migrations,
+    venv,
+    __pycache__,
+    .git,
+    .github,
+    htmlcov,
+    *.egg-info,
+    build,
+    dist,
+    node_modules
+ignore =
+    E203,   # whitespace before ':' (conflit avec Black)
+    E266,   # too many '#' for block comment
+    E501,   # line too long (géré par max-line-length)
+    W503,   # line break before binary operator
+per-file-ignores =
+    tests/*: S101, S106
+    */tests/*: S101
+    manage.py: S101
+    scripts/*: S101
+# Format de sortie
+format = default
+show-source = true
+statistics = true
+count = true

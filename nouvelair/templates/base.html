@@ -1,0 +1,139 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{{ site_name }}{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-nouvelair sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'flights:home' %}">
+                <i class="fas fa-plane me-2"></i>{{ site_name }}
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'flights:home' %}"><i class="fas fa-home me-1"></i>Accueil</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'flights:search_results' %}"><i class="fas fa-search me-1"></i>Reservation</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'destinations:list' %}"><i class="fas fa-map-marker-alt me-1"></i>Destinations</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'promotions:list' %}"><i class="fas fa-tags me-1"></i>Offres</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'bookings:lookup' %}"><i class="fas fa-suitcase me-1"></i>Ma Reservation</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav">
+                    {% if user.is_authenticated %}
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
+                                <i class="fas fa-user-circle me-1"></i>{{ user.first_name|default:user.username }}
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a class="dropdown-item" href="{% url 'accounts:profile' %}"><i class="fas fa-user me-2"></i>Mon Profil</a></li>
+                                <li><a class="dropdown-item" href="{% url 'bookings:my_bookings' %}"><i class="fas fa-list me-2"></i>Mes Reservations</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="{% url 'accounts:logout' %}"><i class="fas fa-sign-out-alt me-2"></i>Deconnexion</a></li>
+                            </ul>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'accounts:login' %}"><i class="fas fa-sign-in-alt me-1"></i>Connexion</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'accounts:register' %}"><i class="fas fa-user-plus me-1"></i>Inscription</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Messages -->
+    {% if messages %}
+    <div class="container mt-3">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Contenu principal -->
+    {% block content %}{% endblock %}
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-5 mt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <h5><i class="fas fa-plane me-2"></i>{{ site_name }}</h5>
+                    <p class="text-white-50">{{ site_tagline }}</p>
+                    <div class="social-links">
+                        <a href="#" class="text-white me-3"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="text-white me-3"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-white me-3"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="text-white"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                <div class="col-md-2 mb-4">
+                    <h6>Navigation</h6>
+                    <ul class="list-unstyled">
+                        <li><a href="{% url 'flights:home' %}" class="text-white-50 text-decoration-none">Accueil</a></li>
+                        <li><a href="{% url 'destinations:list' %}" class="text-white-50 text-decoration-none">Destinations</a></li>
+                        <li><a href="{% url 'promotions:list' %}" class="text-white-50 text-decoration-none">Offres</a></li>
+                        <li><a href="{% url 'flights:airport_list' %}" class="text-white-50 text-decoration-none">Aeroports</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-2 mb-4">
+                    <h6>Assistance</h6>
+                    <ul class="list-unstyled">
+                        <li><a href="{% url 'bookings:lookup' %}" class="text-white-50 text-decoration-none">Ma Reservation</a></li>
+                        <li><a href="{% url 'legal' %}" class="text-white-50 text-decoration-none">Mentions Legales</a></li>
+                        <li><a href="{% url 'terms' %}" class="text-white-50 text-decoration-none">Conditions Generales</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <h6>Newsletter</h6>
+                    <p class="text-white-50 small">Recevez nos meilleures offres directement par email.</p>
+                    <form id="newsletter-form" class="d-flex">
+                        <input type="email" id="newsletter-email" class="form-control me-2" placeholder="Votre email" required>
+                        <button type="submit" class="btn btn-nouvelair">S'abonner</button>
+                    </form>
+                </div>
+            </div>
+            <hr class="border-secondary">
+            <div class="row">
+                <div class="col-md-6 text-white-50 small">
+                    &copy; {{ site_name }} - Tous droits reserves
+                </div>
+                <div class="col-md-6 text-end text-white-50 small">
+                    Projet Fil Rouge - Formation Test/QA &amp; IA
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{% static 'js/main.js' %}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

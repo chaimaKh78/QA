@@ -1,0 +1,596 @@
+# =============================================================================
+# NouvelAir QA Pipeline - GitHub Actions Workflow
+# =============================================================================
+# Pipeline CI/CD complet avec 7 jobs pour assurer la qualité du code.
+# Déclenché sur push (main, sprint1, sprint2) et PR (main).
+# =============================================================================
+
+name: NouvelAir QA Pipeline
+
+on:
+  push:
+    branches: [main, sprint1, sprint2]
+  pull_request:
+    branches: [main]
+
+env:
+  DJANGO_SETTINGS_MODULE: nouvelair.settings
+  PYTHONUNBUFFERED: "1"
+  COVERAGE_MIN: 80
+
+jobs:
+  # ===========================================================================
+  # Job 1: Linting - Vérification de la qualité du code
+  # ===========================================================================
+  lint:
+    name: "Linting (flake8 + pylint)"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout du code
+        uses: actions/checkout@v4
+
+      - name: Configuration Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - name: Installation des dépendances
+        run: |
+          python -m pip install --upgrade pip
+          pip install flake8 pylint pylint-django
+          pip install -r requirements.txt
+          pip install -r requirements_test.txt
+
+      - name: Vérification flake8
+        run: |
+          echo "## Flake8 Lint Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          flake8 . --config=.flake8 --statistics --count --show-source --output-file=flake8_report.txt || true
+          ERRORS=$(flake8 . --config=.flake8 --count --select=E9,F63,F7,F82)
+          WARNINGS=$(flake8 . --config=.flake8 --count --extend-ignore=E9,F63,F7,F82)
+          echo "| Métrique | Valeur |" >> $GITHUB_STEP_SUMMARY
+          echo "|----------|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Erreurs (E9,F63,F7,F82) | ${ERRORS} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Avertissements | ${WARNINGS} |" >> $GITHUB_STEP_SUMMARY
+          if [ "$ERRORS" -gt 0 ]; then
+            echo "### Erreurs détectées par flake8" >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+            cat flake8_report.txt >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+            exit 1
+          else
+            echo "✅ Aucune erreur flake8 détectée" >> $GITHUB_STEP_SUMMARY
+          fi
+
+      - name: Vérification pylint sur tests/
+        run: |
+          echo "## Pylint Results (tests/)" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          pylint tests/ --rcfile=.pylintrc --exit-zero --reports=y --output-format=text 2>&1 | tee pylint_report.txt || true
+          SCORE=$(grep "Your code has been rated at" pylint_report.txt | grep -oP '\d+\.\d+')
+          if [ -n "$SCORE" ]; then
+            echo "**Score Pylint: ${SCORE}/10.00**" >> $GITHUB_STEP_SUMMARY
+          fi
+
+      - name: Upload rapports lint
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lint-reports
+          path: |
+            flake8_report.txt
+            pylint_report.txt
+          retention-days: 7
+
+  # ===========================================================================
+  # Job 2: Tests unitaires - Couverture de code avec matrix Python
+  # ===========================================================================
+  unit-tests:
+    name: "Tests Unitaires (Python ${{ matrix.python-version }})"
+    runs-on: ubuntu-latest
+    needs: lint
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12"]
+
+    steps:
+      - name: Checkout du code
+        uses: actions/checkout@v4
+
+      - name: Configuration Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: "pip"
+
+      - name: Installation des dépendances
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install -r requirements_test.txt
+
+      - name: Exécution des tests unitaires avec couverture
+        env:
+          DJANGO_SETTINGS_MODULE: nouvelair.settings
+          COVERAGE_FILE: ".coverage.${{ matrix.python-version }}"
+        run: |
+          pytest tests/unit/ -m unit --cov --cov-report=xml --cov-report=html --cov-fail-under=${{ env.COVERAGE_MIN }} -v --tb=short
+
+      - name: Rapport de couverture dans le summary
+        if: always()
+        run: |
+          echo "## Couverture de code (Python ${{ matrix.python-version }})" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          python -m coverage report --skip-covered >> $GITHUB_STEP_SUMMARY || true
+          echo "" >> $GITHUB_STEP_SUMMARY
+          TOTAL=$(python -m coverage report --format=total 2>/dev/null || echo "N/A")
+          if [ "$TOTAL" != "N/A" ]; then
+            echo "**Couverture totale: ${TOTAL}%** (minimum requis: ${{ env.COVERAGE_MIN }}%)" >> $GITHUB_STEP_SUMMARY
+          fi
+
+      - name: Upload rapport de couverture
+        if: matrix.python-version == '3.12' && always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report-py312
+          path: |
+            coverage.xml
+            htmlcov/
+          retention-days: 14
+
+  # ===========================================================================
+  # Job 3: Tests d'intégration
+  # ===========================================================================
+  integration-tests:
+    name: "Tests d'Intégration"
+    runs-on: ubuntu-latest
+    needs: lint
+
+    steps:
+      - name: Checkout du code
+        uses: actions/checkout@v4
+
+      - name: Configuration Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - name: Installation des dépendances
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install -r requirements_test.txt
+
+      - name: Exécution des tests d'intégration
+        env:
+          DJANGO_SETTINGS_MODULE: nouvelair.settings
+        run: |
+          pytest tests/integration/ -m integration -v --tb=short --junitxml=integration-results.xml
+
+      - name: Rapport dans le summary
+        if: always()
+        run: |
+          echo "## Résultats Tests d'Intégration" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          PASSED=$(grep -oP 'passed=\K\d+' integration-results.xml 2>/dev/null || echo "0")
+          FAILED=$(grep -oP 'failures=\K\d+' integration-results.xml 2>/dev/null || echo "0")
+          ERRORS=$(grep -oP 'errors=\K\d+' integration-results.xml 2>/dev/null || echo "0")
+          echo "| Statut | Nombre |" >> $GITHUB_STEP_SUMMARY
+          echo "|--------|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| ✅ Réussis | ${PASSED} |" >> $GITHUB_STEP_SUMMARY
+          echo "| ❌ Échoués | ${FAILED} |" >> $GITHUB_STEP_SUMMARY
+          echo "| ⚠️ Erreurs | ${ERRORS} |" >> $GITHUB_STEP_SUMMARY
+
+      - name: Upload résultats JUnit
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: integration-results
+          path: integration-results.xml
+          retention-days: 14
+
+  # ===========================================================================
+  # Job 4: Tests BDD (Behave)
+  # ===========================================================================
+  bdd-tests:
+    name: "Tests BDD (Behave)"
+    runs-on: ubuntu-latest
+    needs: lint
+
+    steps:
+      - name: Checkout du code
+        uses: actions/checkout@v4
+
+      - name: Configuration Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - name: Installation des dépendances
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install -r requirements_test.txt
+          pip install behave behave-django
+
+      - name: Exécution des tests BDD
+        env:
+          DJANGO_SETTINGS_MODULE: nouvelair.settings
+        run: |
+          behave features/ --tags=sprint1,sprint2 -f pretty --no-capture --junit --junit-directory=bdd-results/ || true
+
+      - name: Rapport dans le summary
+        if: always()
+        run: |
+          echo "## Résultats Tests BDD" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          if [ -d bdd-results ]; then
+            echo "**Scénarios Behave exécutés avec les tags: sprint1, sprint2**" >> $GITHUB_STEP_SUMMARY
+            for file in bdd-results/*.xml; do
+              if [ -f "$file" ]; then
+                echo "Résultats: $(basename $file)" >> $GITHUB_STEP_SUMMARY
+              fi
+            done
+          else
+            echo "Aucun fichier de résultats BDD trouvé." >> $GITHUB_STEP_SUMMARY
+          fi
+
+      - name: Upload résultats BDD
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: bdd-results
+          path: bdd-results/
+          retention-days: 7
+
+  # ===========================================================================
+  # Job 5: Tests End-to-End (Playwright)
+  # ===========================================================================
+  e2e-tests:
+    name: "Tests End-to-End (Playwright)"
+    runs-on: ubuntu-latest
+    needs: [unit-tests, integration-tests]
+
+    steps:
+      - name: Checkout du code
+        uses: actions/checkout@v4
+
+      - name: Configuration Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - name: Installation des dépendances
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install -r requirements_test.txt
+          pip install pytest-playwright
+
+      - name: Installation des navigateurs Playwright
+        run: playwright install chromium --with-deps
+
+      - name: Exécution des tests E2E
+        env:
+          DJANGO_SETTINGS_MODULE: nouvelair.settings
+        run: |
+          pytest tests/e2e/ -m e2e --browser chromium -v --tb=short --screenshot=on --junitxml=e2e-results.xml
+
+      - name: Rapport dans le summary
+        if: always()
+        run: |
+          echo "## Résultats Tests End-to-End" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          PASSED=$(grep -oP 'passed=\K\d+' e2e-results.xml 2>/dev/null || echo "0")
+          FAILED=$(grep -oP 'failures=\K\d+' e2e-results.xml 2>/dev/null || echo "0")
+          echo "| Statut | Nombre |" >> $GITHUB_STEP_SUMMARY
+          echo "|--------|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| ✅ Réussis | ${PASSED} |" >> $GITHUB_STEP_SUMMARY
+          echo "| ❌ Échoués | ${FAILED} |" >> $GITHUB_STEP_SUMMARY
+
+      - name: Upload captures d'écran
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-screenshots
+          path: |
+            test-results/
+            screenshots/
+          retention-days: 7
+
+      - name: Upload résultats E2E
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-results
+          path: e2e-results.xml
+          retention-days: 14
+
+  # ===========================================================================
+  # Job 6: Tests de performance (Locust)
+  # ===========================================================================
+  performance-tests:
+    name: "Tests de Performance"
+    runs-on: ubuntu-latest
+    needs: [unit-tests, integration-tests]
+
+    steps:
+      - name: Checkout du code
+        uses: actions/checkout@v4
+
+      - name: Configuration Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - name: Installation des dépendances
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install -r requirements_test.txt
+          pip install locust
+
+      - name: Lancement du serveur Django en arrière-plan
+        env:
+          DJANGO_SETTINGS_MODULE: nouvelair.settings
+        run: |
+          python manage.py migrate --run-syncdb 2>/dev/null || python manage.py migrate 2>/dev/null || true
+          python manage.py runserver 0.0.0.0:8888 &
+          sleep 5
+
+      - name: Exécution du test de charge Locust
+        run: |
+          cat > locustfile_qa.py << 'LOCUSTFILE'
+          from locust import HttpUser, task, between
+
+          class NouvelAirUser(HttpUser):
+              wait_time = between(1, 3)
+
+              @task(5)
+              def home(self):
+                  self.client.get("/", name="Page d'accueil")
+
+              @task(3)
+              def search_flights(self):
+                  self.client.get("/recherche/", name="Recherche vols")
+
+              @task(2)
+              def airports(self):
+                  self.client.get("/aeroports/", name="Liste aéroports")
+
+              @task(1)
+              def promotions(self):
+                  self.client.get("/promotions/", name="Promotions")
+
+              @task(1)
+              def destinations(self):
+                  self.client.get("/destinations/", name="Destinations")
+          LOCUSTFILE
+
+          locust -f locustfile_qa.py \
+            --host=http://localhost:8888 \
+            --users 10 \
+            --spawn-rate 2 \
+            --run-time 60s \
+            --headless \
+            --only-summary \
+            --html=performance-report.html \
+            --csv=performance-results 2>&1 | tee locust_output.txt || true
+
+      - name: Vérification des seuils de performance
+        run: |
+          echo "## Rapport de Performance" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          if [ -f performance-results_stats.csv ]; then
+            echo "**Métriques de performance (10 utilisateurs, 60s):**" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "| Endpoint | Requêtes | Médiane (ms) | 95e centile (ms) |" >> $GITHUB_STEP_SUMMARY
+            echo "|----------|----------|---------------|--------------------|" >> $GITHUB_STEP_SUMMARY
+            tail -n +2 performance-results_stats.csv | while IFS=',' read -r name req_count median p95; do
+              if [ -n "$name" ] && [ "$name" != "None" ] && [ "$name" != "Aggregated" ]; then
+                echo "| ${name} | ${req_count} | ${median} | ${p95} |" >> $GITHUB_STEP_SUMMARY
+              fi
+            done
+
+            # Vérifier la latence médiane agrégée
+            MEDIAN=$(grep "Aggregated" performance-results_stats.csv | cut -d',' -f6)
+            if [ -n "$MEDIAN" ] && [ "$MEDIAN" -lt 3000 ]; then
+              echo "" >> $GITHUB_STEP_SUMMARY
+              echo "✅ **Seuil de performance respecté**: latence médiane = ${MEDIAN}ms < 3000ms" >> $GITHUB_STEP_SUMMARY
+            elif [ -n "$MEDIAN" ]; then
+              echo "" >> $GITHUB_STEP_SUMMARY
+              echo "❌ **Seuil de performance dépassé**: latence médiane = ${MEDIAN}ms >= 3000ms" >> $GITHUB_STEP_SUMMARY
+              exit 1
+            fi
+          else
+            echo "⚠️ Aucune métrique de performance collectée (serveur non démarré ?)" >> $GITHUB_STEP_SUMMARY
+          fi
+
+      - name: Upload rapport de performance
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: performance-report
+          path: |
+            performance-report.html
+            performance-results*.csv
+            locust_output.txt
+          retention-days: 14
+
+  # ===========================================================================
+  # Job 7: Tests de sécurité (Bandit + Safety)
+  # ===========================================================================
+  security-tests:
+    name: "Tests de Sécurité"
+    runs-on: ubuntu-latest
+    needs: lint
+
+    steps:
+      - name: Checkout du code
+        uses: actions/checkout@v4
+
+      - name: Configuration Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - name: Installation des dépendances
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install -r requirements_test.txt
+          pip install bandit safety
+
+      - name: Analyse de sécurité avec Bandit
+        run: |
+          echo "## Analyse de Sécurité - Bandit" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          bandit -r . -f json -o bandit_results.json --exit-zero || true
+          bandit -r . -f screen --exit-zero 2>&1 | tee bandit_screen.txt || true
+
+          LOW=$(python -c "import json; d=json.load(open('bandit_results.json')); print(sum(1 for r in d.get('results',[]) if r.get('issue_severity')=='LOW'))" 2>/dev/null || echo "0")
+          MEDIUM=$(python -c "import json; d=json.load(open('bandit_results.json')); print(sum(1 for r in d.get('results',[]) if r.get('issue_severity')=='MEDIUM'))" 2>/dev/null || echo "0")
+          HIGH=$(python -c "import json; d=json.load(open('bandit_results.json')); print(sum(1 for r in d.get('results',[]) if r.get('issue_severity')=='HIGH'))" 2>/dev/null || echo "0")
+
+          echo "| Sévérité | Nombre |" >> $GITHUB_STEP_SUMMARY
+          echo "|----------|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| 🔴 HIGH | ${HIGH} |" >> $GITHUB_STEP_SUMMARY
+          echo "| 🟠 MEDIUM | ${MEDIUM} |" >> $GITHUB_STEP_SUMMARY
+          echo "| 🟡 LOW | ${LOW} |" >> $GITHUB_STEP_SUMMARY
+
+          if [ "$HIGH" -gt 0 ]; then
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "### 🔴 Vulnérabilités HIGH détectées" >> $GITHUB_STEP_SUMMARY
+            python -c "
+          import json
+          d=json.load(open('bandit_results.json'))
+          high = [r for r in d.get('results',[]) if r.get('issue_severity')=='HIGH']
+          for r in high:
+              print(f'- **{r[\"issue_text\"].strip()}** ({r[\"filename\"]}:{r[\"line_number\"]})')
+          " >> $GITHUB_STEP_SUMMARY
+            echo "❌ **ÉCHEC: ${HIGH} vulnérabilité(s) de sévérité HIGH détectée(s)**" >> $GITHUB_STEP_SUMMARY
+            exit 1
+          else
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "✅ **Aucune vulnérabilité HIGH détectée**" >> $GITHUB_STEP_SUMMARY
+          fi
+
+      - name: Vérification des dépendances avec Safety
+        run: |
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "## Vérification des Dépendances - Safety" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          safety check --json > safety_results.json 2>&1 || true
+          safety check 2>&1 | tee safety_screen.txt || true
+
+          if [ -f safety_results.json ]; then
+            VULN_COUNT=$(python -c "import json; d=json.load(open('safety_results.json')); print(len(d))" 2>/dev/null || echo "0")
+            HIGH_VULN=$(python -c "
+          import json
+          d=json.load(open('safety_results.json'))
+          high = sum(1 for v in d if v.get('vulnerability',{}).get('severity','') in ('high','critical') or 'unresolved' in str(v).lower()[:50])
+          print(high)
+          " 2>/dev/null || echo "0")
+
+            echo "| Statut | Nombre |" >> $GITHUB_STEP_SUMMARY
+            echo "|--------|--------|" >> $GITHUB_STEP_SUMMARY
+            echo "| Vulnérabilités trouvées | ${VULN_COUNT} |" >> $GITHUB_STEP_SUMMARY
+            echo "| HIGH/Critical | ${HIGH_VULN} |" >> $GITHUB_STEP_SUMMARY
+
+            if [ "$HIGH_VULN" -gt 0 ]; then
+              echo "" >> $GITHUB_STEP_SUMMARY
+              echo "❌ **ÉCHEC: ${HIGH_VULN} vulnérabilité(s) HIGH/Critical dans les dépendances**" >> $GITHUB_STEP_SUMMARY
+              exit 1
+            else
+              echo "" >> $GITHUB_STEP_SUMMARY
+              echo "✅ **Aucune vulnérabilité HIGH dans les dépendances**" >> $GITHUB_STEP_SUMMARY
+            fi
+          fi
+
+      - name: Upload rapports de sécurité
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: security-reports
+          path: |
+            bandit_results.json
+            bandit_screen.txt
+            safety_results.json
+            safety_screen.txt
+          retention-days: 14
+
+  # ===========================================================================
+  # Job final: Statut global du pipeline
+  # ===========================================================================
+  pipeline-status:
+    name: "Statut Global du Pipeline"
+    runs-on: ubuntu-latest
+    if: always()
+    needs: [lint, unit-tests, integration-tests, bdd-tests, e2e-tests, performance-tests, security-tests]
+
+    steps:
+      - name: Vérification du statut global
+        run: |
+          echo "# NouvelAir QA Pipeline - Statut Global" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "## Résultats des jobs" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          # Récupérer les statuts de chaque job
+          LINT="${{ needs.lint.result }}"
+          UNIT="${{ needs.unit-tests.result }}"
+          INTEG="${{ needs.integration-tests.result }}"
+          BDD="${{ needs.bdd-tests.result }}"
+          E2E="${{ needs.e2e-tests.result }}"
+          PERF="${{ needs.performance-tests.result }}"
+          SEC="${{ needs.security-tests.result }}"
+
+          status_icon() {
+            case "$1" in
+              success) echo "✅" ;;
+              failure) echo "❌" ;;
+              cancelled) echo "⚠️" ;;
+              skipped) echo "⏭️" ;;
+              *) echo "❓" ;;
+            esac
+          }
+
+          echo "| Job | Statut |" >> $GITHUB_STEP_SUMMARY
+          echo "|-----|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Linting | $(status_icon $LINT) ${LINT} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Tests Unitaires | $(status_icon $UNIT) ${UNIT} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Tests d'Intégration | $(status_icon $INTEG) ${INTEG} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Tests BDD | $(status_icon $BDD) ${BDD} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Tests E2E | $(status_icon $E2E) ${E2E} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Tests Performance | $(status_icon $PERF) ${PERF} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Tests Sécurité | $(status_icon $SEC) ${SEC} |" >> $GITHUB_STEP_SUMMARY
+
+          echo "" >> $GITHUB_STEP_SUMMARY
+          OVERALL="success"
+          for r in $LINT $UNIT $INTEG $BDD $E2E $PERF $SEC; do
+            if [ "$r" = "failure" ]; then
+              OVERALL="failure"
+              break
+            fi
+          done
+
+          if [ "$OVERALL" = "success" ]; then
+            echo "## 🎉 Pipeline réussi !" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "Tous les jobs sont passés avec succès." >> $GITHUB_STEP_SUMMARY
+            echo "Les rapports détaillés sont disponibles dans les artifacts." >> $GITHUB_STEP_SUMMARY
+          else
+            echo "## ❌ Pipeline en échec" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "Un ou plusieurs jobs ont échoué. Consultez les rapports pour plus de détails." >> $GITHUB_STEP_SUMMARY
+            exit 1
+          fi

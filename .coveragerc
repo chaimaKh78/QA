@@ -1,0 +1,65 @@
+# Configuration Coverage pour le projet NouvelAir
+# Documentation : https://coverage.readthedocs.io/
+
+[run]
+# Source à analyser (répertoires des applications Django)
+source =
+    flights
+    bookings
+    accounts
+    destinations
+    promotions
+
+# Fichiers / répertoires à exclure du calcul de couverture
+omit =
+    */migrations/*
+    */admin.py
+    */tests/*
+    */test_*.py
+    */conftest.py
+    */settings.py
+    */settings_*.py
+    */__init__.py
+    */management/*
+    */wsgi.py
+    */asgi.py
+    */staticfiles/*
+    */media/*
+    */fixtures/*
+    features/*
+    manage.py
+    setup_*.py
+
+# Branches conditionnelles
+branch = True
+
+[report]
+# Afficher les lignes manquantes dans le rapport
+show_missing = True
+
+# Seuil minimum de couverture (échoue si < 80%)
+fail_under = 80
+
+# Exclure les lignes spécifiques
+exclude_lines =
+    pragma: no cover
+    def __repr__
+    def __str__
+    raise NotImplementedError
+    if TYPE_CHECKING:
+    if settings.DEBUG
+    @abstract
+
+# Nombre minimum de caractères dans le numéro de ligne
+precision = 2
+
+[html]
+# Répertoire de sortie du rapport HTML
+directory = reports/htmlcov
+
+# Titre du rapport HTML
+title = Couverture de tests — NouvelAir
+
+[xml]
+# Fichier de sortie pour l'intégration CI
+output = reports/coverage.xml

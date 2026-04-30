@@ -1,0 +1,140 @@
+# =============================================================================
+# Configuration Pylint - NouvelAir
+# =============================================================================
+# Configuration adaptée pour le projet Django NouvelAir.
+# Documentation: https://pylint.pycqa.org/en/latest/
+# =============================================================================
+
+[MASTER]
+# Utiliser le plugin Django pour les checks spécifiques
+load-plugins=pylint_django
+django-settings-module=nouvelair.settings
+
+# Répertoires à ignorer
+ignore=
+    migrations,
+    venv,
+    __pycache__,
+    .git,
+    htmlcov,
+    node_modules,
+    build,
+    dist
+
+# Extensions de fichiers à analyser
+extension-pkg-allow-list=
+    django.core.validators
+
+[MESSAGES CONTROL]
+# Désactiver les avertissements de docstrings manquants dans les tests
+disable=
+    C0114,   # missing-module-docstring
+    C0115,   # missing-class-docstring
+    C0116,   # missing-function-docstring
+    C0301,   # line-too-long (géré par flake8)
+    C0303,   # trailing-whitespace
+    C0304,   # missing-final-newline
+    C0305,   # trailing-newlines
+    C0410,   # multiple-imports-on-one-line
+    C0411,   # wrong-import-order
+    C0412,   # ungrouped-imports
+    C0413,   # wrong-import-position
+    R0401,   # cyclic-import (fréquent dans Django)
+    R0901,   # too-many-instance-attributes
+    R0902,   # too-many-instance-attributes
+    R0903,   # too-few-public-methods
+    R0913,   # too-many-arguments
+    R0914,   # too-many-local-variables
+    W0212,   # protected-access (fréquent avec les attributs Django)
+    W0603,   # global-statement
+    W0613,   # unused-argument (fréquent dans les vues)
+    W0622,   # redefined-builtin
+    W0703,   # broad-except
+    W1514,   # unspecified-encoding
+    E0401,   # import-error (géré par l'IDE)
+    E1101,   # no-member (faux positifs Django)
+    N813,    # camelcase-imported-as-lowercase
+    fixme
+
+[REPORTS]
+# Ne pas afficher le rapport complet par défaut
+reports=no
+score=yes
+
+[FORMAT]
+# Longueur maximale des lignes
+max-line-length=120
+# Nombre d'espaces pour l'indentation
+indent-string='    '
+
+[BASIC]
+# Noms de variables et fonctions
+good-names=
+    i,
+    j,
+    k,
+    v,
+    e,
+    ex,
+    pk,
+    id,
+    qs,
+    db,
+    fn,
+    op,
+    ok,
+    os,
+    up,
+    rv,
+    _
+
+# Style de nommage pour les variables
+variable-rgx=[a-z_][a-z0-9_]{0,30}$
+argument-rgx=[a-z_][a-z0-9_]{0,30}$
+attr-rgx=[a-z_][a-z0-9_]{0,30}$
+class-attribute-rgx=([A-Za-z_][A-Za-z0-9_]{0,30}|(__.*__))$
+method-rgx=[a-z_][a-z0-9_]{0,30}$
+function-rgx=[a-z_][a-z0-9_]{0,30}$
+class-rgx=[A-Z_][a-zA-Z0-9_]+$
+const-rgx=(([A-Z_][A-Z0-9_]*|__.*__))$
+module-rgx=([a-z_][a-z0-9_]*)$
+
+[DESIGN]
+# Nombre maximal de méthodes publiques par classe
+max-public-methods=20
+# Nombre maximal d'arguments pour une méthode
+max-args=7
+# Nombre maximal de branches (if/elif)
+max-branches=12
+# Nombre maximal de déclarations de variables locales
+max-locals=15
+# Nombre maximal de return
+max-returns=6
+# Nombre maximal d'instructions dans une méthode
+max-statements=50
+# Nombre maximal d'attributs par classe
+max-attributes=7
+# Nombre maximal de parents
+max-parents=7
+# Complexité cyclomatique maximale
+max-complexity=10
+
+[TYPECHECK]
+# Membres ignorés pour les vérifications de type
+ignored-modules=
+    django,
+    django.contrib,
+    rest_framework,
+    factory,
+    crispy_forms,
+
+generated-members=
+    objects,
+    DoesNotExist,
+    MultipleObjectsReturned
+
+[SIMILARITIES]
+# Seuil minimum de similarité pour les duplications
+min-similarity-lines=4
+# Ignorer les imports lors de la comparaison
+ignore-imports=yes

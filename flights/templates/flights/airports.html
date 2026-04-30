@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}Nos Aéroports - {{ site_name }}{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <h1 class="text-center fw-bold mb-4"><i class="fas fa-map-marked-alt me-2"></i>Nos Aéroports</h1>
+    <p class="text-center text-muted mb-5">Découvrez tous les aéroports desservis par {{ site_name }}</p>
+
+    <div class="row g-4">
+        {% for airport in airports %}
+        <div class="col-md-6 col-lg-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="bg-nouvelair text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width:50px;height:50px;">
+                            <strong>{{ airport.code }}</strong>
+                        </div>
+                        <div>
+                            <h6 class="mb-0 fw-bold">{{ airport.city }}</h6>
+                            <small class="text-muted">{{ airport.country }}</small>
+                        </div>
+                    </div>
+                    <p class="text-muted small mb-2">{{ airport.name }}</p>
+                    <div class="d-flex justify-content-between text-muted small">
+                        <span><i class="fas fa-map-pin me-1"></i>{{ airport.latitude }}, {{ airport.longitude }}</span>
+                        <span class="badge bg-success">Actif</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

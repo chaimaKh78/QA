@@ -1,0 +1,212 @@
+Found 70 test(s).
+Operations to perform:
+  Synchronize unmigrated apps: crispy_bootstrap5, crispy_forms, django_countries, messages, phonenumber_field, staticfiles
+  Apply all migrations: accounts, admin, auth, bookings, contenttypes, destinations, flights, promotions, sessions
+Synchronizing apps without migrations:
+  Creating tables...
+    Running deferred SQL...
+Running migrations:
+  Applying flights.0001_initial... OK
+  Applying contenttypes.0001_initial... OK
+  Applying auth.0001_initial... OK
+  Applying accounts.0001_initial... OK
+  Applying admin.0001_initial... OK
+  Applying admin.0002_logentry_remove_auto_add... OK
+  Applying admin.0003_logentry_add_action_flag_choices... OK
+  Applying contenttypes.0002_remove_content_type_name... OK
+  Applying auth.0002_alter_permission_name_max_length... OK
+  Applying auth.0003_alter_user_email_max_length... OK
+  Applying auth.0004_alter_user_username_opts... OK
+  Applying auth.0005_alter_user_last_login_null... OK
+  Applying auth.0006_require_contenttypes_0002... OK
+  Applying auth.0007_alter_validators_add_error_messages... OK
+  Applying auth.0008_alter_user_username_max_length... OK
+  Applying auth.0009_alter_user_last_name_max_length... OK
+  Applying auth.0010_alter_group_name_max_length... OK
+  Applying auth.0011_update_proxy_permissions... OK
+  Applying auth.0012_alter_user_first_name_max_length... OK
+  Applying bookings.0001_initial... OK
+  Applying destinations.0001_initial... OK
+  Applying promotions.0001_initial... OK
+  Applying sessions.0001_initial... OK
+System check identified no issues (0 silenced).
+Creating test database for alias 'default' ('file:memorydb_default?mode=memory&cache=shared')...
+
+test_booking_count (accounts.tests.test_models.AccountModelTest.test_booking_count)
+Vérifie le compteur de réservations. ... ok
+test_profile_auto_creation (accounts.tests.test_models.AccountModelTest.test_profile_auto_creation)
+Vérifie que le profil est créé automatiquement avec l'utilisateur. ... ok
+test_profile_full_name (accounts.tests.test_models.AccountModelTest.test_profile_full_name)
+Vérifie la propriété full_name. ... ok
+test_profile_without_full_name (accounts.tests.test_models.AccountModelTest.test_profile_without_full_name)
+Vérifie le fallback sur le username. ... ok
+test_authenticated_user_redirected_from_register (accounts.tests.test_models.AccountViewTest.test_authenticated_user_redirected_from_register)
+Vérifie la redirection si déjà connecté. ... ok
+test_login_invalid (accounts.tests.test_models.AccountViewTest.test_login_invalid)
+Vérifie l'échec de connexion avec mauvais mot de passe. ... ok
+test_login_page (accounts.tests.test_models.AccountViewTest.test_login_page)
+Vérifie l'accès à la page de connexion. ... ok
+test_login_success (accounts.tests.test_models.AccountViewTest.test_login_success)
+Vérifie la connexion réussie. ... ok
+test_logout (accounts.tests.test_models.AccountViewTest.test_logout)
+Vérifie la déconnexion. ... ok
+test_profile_authenticated (accounts.tests.test_models.AccountViewTest.test_profile_authenticated)
+Vérifie l'accès au profil quand connecté. ... ok
+test_profile_requires_login (accounts.tests.test_models.AccountViewTest.test_profile_requires_login)
+Vérifie que le profil nécessite une connexion. ... ok
+test_profile_update (accounts.tests.test_models.AccountViewTest.test_profile_update)
+Vérifie la mise à jour du profil. ... ok
+test_register_duplicate_email (accounts.tests.test_models.AccountViewTest.test_register_duplicate_email)
+Vérifie qu'on ne peut pas utiliser un email en doublon. ... ok
+test_register_page (accounts.tests.test_models.AccountViewTest.test_register_page)
+Vérifie l'accès à la page d'inscription. ... ok
+test_register_success (accounts.tests.test_models.AccountViewTest.test_register_success)
+Vérifie l'inscription réussie. ... ok
+test_booking_creation (bookings.tests.test_models.BookingModelTest.test_booking_creation)
+Vérifie la création correcte d'une réservation. ... ok
+test_booking_str (bookings.tests.test_models.BookingModelTest.test_booking_str)
+Vérifie la représentation string. ... ok
+test_passenger_creation (bookings.tests.test_models.BookingModelTest.test_passenger_creation)
+Vérifie la création d'un passager. ... ok
+test_payment_creation (bookings.tests.test_models.BookingModelTest.test_payment_creation)
+Vérifie la création d'un paiement. ... ok
+test_booking_cancellation (bookings.tests.test_models.BookingViewTest.test_booking_cancellation)
+Vérifie l'annulation d'une réservation. ... ok
+test_booking_lookup_page (bookings.tests.test_models.BookingViewTest.test_booking_lookup_page)
+Vérifie l'accès à la page de recherche de réservation. ... ok
+test_my_bookings_authenticated (bookings.tests.test_models.BookingViewTest.test_my_bookings_authenticated)
+Vérifie l'accès aux réservations quand connecté. ... ok
+test_my_bookings_requires_login (bookings.tests.test_models.BookingViewTest.test_my_bookings_requires_login)
+Vérifie que mes réservations nécessite une connexion. ... ok
+test_select_flight_redirect (bookings.tests.test_models.BookingViewTest.test_select_flight_redirect)
+Vérifie la sélection de vol. ... ok
+test_destination_creation (destinations.tests.test_models.DestinationModelTest.test_destination_creation)
+Vérifie la création correcte d'une destination. ... ok
+test_destination_str (destinations.tests.test_models.DestinationModelTest.test_destination_str)
+Vérifie la représentation string. ... ok
+test_get_lowest_price (destinations.tests.test_models.DestinationModelTest.test_get_lowest_price)
+Vérifie la méthode de prix le plus bas. ... ok
+test_unique_slug (destinations.tests.test_models.DestinationModelTest.test_unique_slug)
+Vérifie l'unicité du slug. ... ok
+test_review_creation (destinations.tests.test_models.DestinationReviewTest.test_review_creation)
+Vérifie la création d'un avis. ... ok
+test_unique_review_per_user (destinations.tests.test_models.DestinationReviewTest.test_unique_review_per_user)
+Vérifie qu'un utilisateur ne peut laisser qu'un avis par destination. ... ok
+test_destination_detail (destinations.tests.test_models.DestinationViewTest.test_destination_detail)
+Vérifie l'accès au détail d'une destination. ... ok
+test_destination_detail_404 (destinations.tests.test_models.DestinationViewTest.test_destination_detail_404)
+Vérifie le 404 pour un slug invalide. ... WARNING Not Found: /destinations/inexistant/
+ok
+test_destination_list (destinations.tests.test_models.DestinationViewTest.test_destination_list)
+Vérifie l'accès à la liste des destinations. ... ok
+test_aircraft_creation (flights.tests.test_models.AircraftModelTest.test_aircraft_creation)
+Vérifie la création correcte d'un aéronef. ... ok
+test_aircraft_str (flights.tests.test_models.AircraftModelTest.test_aircraft_str)
+Vérifie la représentation string. ... ok
+test_seats_sum (flights.tests.test_models.AircraftModelTest.test_seats_sum)
+Vérifie que économie + affaires = total. ... ok
+test_airport_creation (flights.tests.test_models.AirportModelTest.test_airport_creation)
+Vérifie la création correcte d'un aéroport. ... ok
+test_airport_ordering (flights.tests.test_models.AirportModelTest.test_airport_ordering)
+Vérifie l'ordre de tri des aéroports par code. ... ok
+test_airport_str_representation (flights.tests.test_models.AirportModelTest.test_airport_str_representation)
+Vérifie la représentation string de l'aéroport. ... ok
+test_airport_unique_code (flights.tests.test_models.AirportModelTest.test_airport_unique_code)
+Vérifie que le code IATA est unique. ... ok
+test_flight_creation (flights.tests.test_models.FlightModelTest.test_flight_creation)
+Vérifie la création correcte d'un vol. ... ok
+test_flight_duration_auto_calculated (flights.tests.test_models.FlightModelTest.test_flight_duration_auto_calculated)
+Vérifie que la durée est calculée automatiquement. ... ok
+test_flight_search (flights.tests.test_models.FlightModelTest.test_flight_search)
+Vérifie la méthode de recherche de vols. ... ok
+test_flight_search_no_results (flights.tests.test_models.FlightModelTest.test_flight_search_no_results)
+Vérifie que la recherche renvoie vide si pas de résultats. ... ok
+test_flight_str (flights.tests.test_models.FlightModelTest.test_flight_str)
+Vérifie la représentation string du vol. ... ok
+test_price_methods (flights.tests.test_models.FlightModelTest.test_price_methods)
+Vérifie les méthodes de prix. ... ok
+test_airport_autocomplete (flights.tests.test_models.FlightViewTest.test_airport_autocomplete)
+Vérifie l'API d'autocomplétion des aéroports. ... ok
+test_airport_list_view (flights.tests.test_models.FlightViewTest.test_airport_list_view)
+Vérifie la page de liste des aéroports. ... ok
+test_flight_detail_view (flights.tests.test_models.FlightViewTest.test_flight_detail_view)
+Vérifie la page de détail d'un vol. ... ok
+test_home_view_contains_form (flights.tests.test_models.FlightViewTest.test_home_view_contains_form)
+Vérifie que la page d'accueil contient le formulaire de recherche. ... ok
+test_home_view_status (flights.tests.test_models.FlightViewTest.test_home_view_status)
+Vérifie que la page d'accueil est accessible. ... ok
+test_search_flight_post (flights.tests.test_models.FlightViewTest.test_search_flight_post)
+Vérifie la soumission du formulaire de recherche. ... ok
+test_search_same_airport_error (flights.tests.test_models.FlightViewTest.test_search_same_airport_error)
+Vérifie qu'on ne peut pas chercher avec le même aéroport. ... ok
+test_promotion_creation (promotions.tests.test_models.PromotionModelTest.test_promotion_creation)
+Vérifie la création correcte d'une promotion. ... ok
+test_promotion_expired (promotions.tests.test_models.PromotionModelTest.test_promotion_expired)
+Vérifie qu'une promotion expirée n'est pas valide. ... ok
+test_promotion_is_valid (promotions.tests.test_models.PromotionModelTest.test_promotion_is_valid)
+Vérifie la validité d'une promotion active. ... ok
+test_promotion_max_uses_reached (promotions.tests.test_models.PromotionModelTest.test_promotion_max_uses_reached)
+Vérifie qu'une promotion épuisée n'est pas valide. ... ok
+test_remaining_uses (promotions.tests.test_models.PromotionModelTest.test_remaining_uses)
+Vérifie le calcul des utilisations restantes. ... ok
+test_newsletter_subscribe_duplicate (promotions.tests.test_models.PromotionViewTest.test_newsletter_subscribe_duplicate)
+Vérifie qu'on ne peut pas s'inscrire deux fois. ... ok
+test_newsletter_subscribe_missing_email (promotions.tests.test_models.PromotionViewTest.test_newsletter_subscribe_missing_email)
+Vérifie que l'email est requis. ... ok
+test_newsletter_subscribe_success (promotions.tests.test_models.PromotionViewTest.test_newsletter_subscribe_success)
+Vérifie l'inscription à la newsletter. ... ok
+test_promotion_detail (promotions.tests.test_models.PromotionViewTest.test_promotion_detail)
+Vérifie l'accès au détail d'une promotion. ... ok
+test_promotion_list (promotions.tests.test_models.PromotionViewTest.test_promotion_list)
+Vérifie l'accès à la liste des promotions. ... ok
+test_login_flow (ai_testing.tests_e2e.E2EAuthenticationTest.test_login_flow)
+Test le flux de connexion. ... WARNING Not Found: /static/css/style.css
+WARNING Not Found: /static/js/main.js
+WARNING Not Found: /favicon.ico
+WARNING Not Found: /static/css/style.css
+WARNING Not Found: /static/js/main.js
+ok
+test_logout_flow (ai_testing.tests_e2e.E2EAuthenticationTest.test_logout_flow)
+Test le flux de déconnexion. ... WARNING Not Found: /static/css/style.css
+WARNING Not Found: /static/js/main.js
+ok
+test_registration_flow (ai_testing.tests_e2e.E2EAuthenticationTest.test_registration_flow)
+Test le flux d'inscription complet. ... WARNING Not Found: /static/js/main.js
+WARNING Not Found: /static/css/style.css
+WARNING Not Found: /static/css/style.css
+WARNING Not Found: /static/js/main.js
+ok
+test_booking_lookup_page (ai_testing.tests_e2e.E2EBookingTest.test_booking_lookup_page)
+Test la page de recherche de réservation. ... WARNING Not Found: /static/css/style.css
+WARNING Not Found: /static/js/main.js
+WARNING Not Found: /favicon.ico
+ok
+test_flight_search_form_present (ai_testing.tests_e2e.E2EHomeAndSearchTest.test_flight_search_form_present)
+Vérifie la présence du formulaire de recherche de vols. ... WARNING Not Found: /static/css/style.css
+WARNING Not Found: /static/js/main.js
+WARNING Not Found: /favicon.ico
+ok
+test_home_page_loads (ai_testing.tests_e2e.E2EHomeAndSearchTest.test_home_page_loads)
+Vérifie que la page d'accueil se charge correctement. ... WARNING Not Found: /static/css/style.css
+WARNING Not Found: /static/js/main.js
+ok
+test_navigation_links (ai_testing.tests_e2e.E2EHomeAndSearchTest.test_navigation_links)
+Vérifie que les liens de navigation fonctionnent. ... WARNING Not Found: /static/css/style.css
+WARNING Not Found: /static/js/main.js
+WARNING Not Found: /static/css/style.css
+WARNING Not Found: /static/js/main.js
+WARNING Not Found: /static/js/main.js
+WARNING Not Found: /static/css/style.css
+WARNING Not Found: /static/css/style.css
+WARNING Not Found: /static/js/main.js
+ok
+INFO - Broken pipe from ('127.0.0.1', 63932)
+INFO - Broken pipe from ('127.0.0.1', 54687)
+INFO - Broken pipe from ('127.0.0.1', 49789)
+
+----------------------------------------------------------------------
+Ran 70 tests in 47.259s
+
+OK
+Destroying test database for alias 'default' ('file:memorydb_default?mode=memory&cache=shared')...
+

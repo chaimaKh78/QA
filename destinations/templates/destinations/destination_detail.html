@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+
+{% block title %}{{ destination.name }} - {{ site_name }}{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row mb-4">
+        <div class="col-12">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'flights:home' %}">Accueil</a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'destinations:list' %}">Destinations</a></li>
+                    <li class="breadcrumb-item active">{{ destination.name }}</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+
+    <!-- En-tête destination -->
+    <div class="row mb-5">
+        <div class="col-lg-8">
+            <span class="badge bg-nouvelair mb-2">{{ destination.get_category_display }}</span>
+            <h1 class="fw-bold">{{ destination.name }}</h1>
+            <div class="d-flex align-items-center mb-3">
+                <span class="text-warning me-2"><i class="fas fa-star"></i> {{ destination.rating }}/5</span>
+                <span class="text-muted">({{ reviews|length }} avis)</span>
+            </div>
+            <p class="lead">{{ destination.description }}</p>
+        </div>
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm position-sticky" style="top: 80px;">
+                <div class="card-body text-center">
+                    {% if lowest_price %}
+                    <small class="text-muted">À partir de</small>
+                    <h3 class="text-nouvelair fw-bold">{{ lowest_price }} TND</h3>
+                    <small class="text-muted">par personne</small>
+                    {% endif %}
+                    <a href="{% url 'flights:home' %}" class="btn btn-nouvelair btn-lg w-100 mt-3">
+                        <i class="fas fa-search me-2"></i>Rechercher un vol
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Galerie -->
+    {% if gallery %}
+    <div class="row g-3 mb-5">
+        {% for img in gallery %}
+        <div class="col-md-4">
+            <img src="{{ img.image.url }}" class="img-fluid rounded" alt="{{ img.alt_text }}" style="height: 200px; object-fit: cover; width: 100%;">
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Vols disponibles -->
+    {% if available_flights %}
+    <div class="mb-5">
+        <h3 class="fw-bold mb-4"><i class="fas fa-plane me-2"></i>Vols Disponibles</h3>
+        <div class="row g-3">
+            {% for flight in available_flights %}
+            <div class="col-md-6">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <span class="badge bg-nouvelair mb-1">{{ flight.flight_number }}</span>
+                                <h5 class="mb-0">{{ flight.origin.code }} <i class="fas fa-arrow-right mx-1"></i> {{ flight.destination.code }}</h5>
+                                <small class="text-muted">{{ flight.departure_time|date:"d M Y" }}</small>
+                            </div>
+                            <div class="text-end">
+                                <strong class="text-nouvelair fs-5">{{ flight.get_current_price_economy }} TND</strong>
+                                <br>
+                                <a href="{% url 'flights:flight_detail' flight.flight_number %}" class="btn btn-sm btn-outline-nouvelair">Réserver</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Avis -->
+    <div>
+        <h3 class="fw-bold mb-4"><i class="fas fa-comments me-2"></i>Avis des Voyageurs</h3>
+        {% if reviews %}
+        <div class="row g-3">
+            {% for review in reviews %}
+            <div class="col-md-6">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between mb-2">
+                            <strong>{{ review.user.username }}</strong>
+                            <span class="text-warning">
+                                {% for i in "12345" %}
+                                    {% if forloop.counter <= review.rating %}<i class="fas fa-star"></i>{% else %}<i class="far fa-star"></i>{% endif %}
+                                {% endfor %}
+                            </span>
+                        </div>
+                        <h6>{{ review.title }}</h6>
+                        <p class="text-muted small mb-0">{{ review.comment }}</p>
+                        <small class="text-muted d-block mt-2">{{ review.created_at|date:"d/m/Y" }}</small>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <p class="text-muted">Aucun avis pour le moment. Soyez le premier à donner votre avis !</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

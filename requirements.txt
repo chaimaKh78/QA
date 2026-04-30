@@ -1,0 +1,37 @@
+# ============================================
+# NouvelAir - Application de Gestion des Réservations
+# Projet Fil Rouge - Formation Test/QA & IA
+# ============================================
+
+# Framework
+Django>=4.2,<5.0
+
+# Formulaires
+django-crispy-forms>=2.0
+crispy-bootstrap5>=2023.10
+
+# Utilitaires
+django-countries>=7.5
+django-phonenumber-field>=7.0
+
+# Tests & QA
+selenium>=4.15
+webdriver-manager>=4.0
+coverage>=7.3
+pytest>=7.4
+pytest-django>=4.5
+
+# Linting
+flake8>=6.1
+black>=23.0
+isort>=5.12
+
+# Rapports
+pytest-html>=4.1
+allure-pytest>=2.13
+
+# Outils de développement
+django-debug-toolbar>=4.2
+
+# Sécurité
+python-decouple>=3.8

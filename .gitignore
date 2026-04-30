@@ -1,0 +1,103 @@
+# =============================================================================
+# .gitignore — NouvelAir
+# =============================================================================
+# Fichiers et répertoires à exclure du suivi Git.
+# Configuration adaptée aux tests automatisés et rapports.
+# =============================================================================
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+*.egg
+dist/
+build/
+*.whl
+
+# --- Environnement virtuel ---
+venv/
+.venv/
+env/
+ENV/
+
+# --- Base de données ---
+db.sqlite3
+*.db
+*.sqlite
+*.sqlite3
+
+# --- Django ---
+*.log
+local_settings.py
+media/
+
+# --- Couverture de code ---
+htmlcov/
+.coverage
+.coverage.*
+coverage.xml
+*.cover
+.hypothesis/
+
+# --- Rapports de test ---
+reports/screenshots/
+reports/performance/*.html
+reports/performance/*.csv
+reports/security/*.json
+reports/security/*.txt
+test_output.txt
+pytest_output.txt
+nosetests.xml
+junit*.xml
+
+# --- Allure ---
+allure-results/
+allure-report/
+allure-*
+
+# --- Playwright ---
+test-results/
+playwright-report/
+screenshots/
+videos/
+*.trace.zip
+
+# --- Locust ---
+locust_stats.csv
+locust_stats_history.csv
+
+# --- IDE ---
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.settings/
+
+# --- OS ---
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# --- Secrets ---
+.env
+.env.*
+!.env.example
+secrets.json
+
+# --- Node (si frontend) ---
+node_modules/
+.npm
+.cache/
+
+# --- Divers ---
+*.bak
+*.tmp
+*.temp
+*.bak
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/

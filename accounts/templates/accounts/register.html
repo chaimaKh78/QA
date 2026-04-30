@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block title %}Inscription - {{ site_name }}{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="text-center mb-4">
+                <i class="fas fa-user-plus fa-3x text-nouvelair mb-3"></i>
+                <h2>Créer un compte</h2>
+                <p class="text-muted">Rejoignez {{ site_name }} et profitez de nos offres exclusives</p>
+            </div>
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <form method="post">
+                        {% csrf_token %}
+                        {% if form.non_field_errors %}
+                        <div class="alert alert-danger">
+                            {% for error in form.non_field_errors %}{{ error }}{% endfor %}
+                        </div>
+                        {% endif %}
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Nom d'utilisateur</label>
+                                {{ form.username }}
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Email</label>
+                                {{ form.email }}
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Prénom</label>
+                                {{ form.first_name }}
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Nom</label>
+                                {{ form.last_name }}
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Mot de passe</label>
+                                {{ form.password1 }}
+                                <small class="text-muted d-block">8 caractères minimum</small>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Confirmer le mot de passe</label>
+                                {{ form.password2 }}
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-nouvelair btn-lg w-100 mt-4 mb-3">
+                            <i class="fas fa-user-plus me-2"></i>S'inscrire
+                        </button>
+                        <p class="text-center mb-0">
+                            Déjà un compte ?
+                            <a href="{% url 'accounts:login' %}" class="text-nouvelair">Se connecter</a>
+                        </p>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}Mentions Légales - {{ site_name }}{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <h1 class="mb-4">Mentions Légales</h1>
+            <div class="card">
+                <div class="card-body">
+                    <h5>1. Informations Générales</h5>
+                    <p>Ce site est exploité dans le cadre d'un projet de formation. {{ site_name }} est une application de démonstration pour la gestion de réservations de vols.</p>
+
+                    <h5>2. Propriété Intellectuelle</h5>
+                    <p>L'ensemble du contenu de ce site (textes, images, logos, icônes) est protégé par le droit de la propriété intellectuelle. Toute reproduction est interdite sans autorisation préalable.</p>
+
+                    <h5>3. Responsabilité</h5>
+                    <p>Ce site est un projet éducatif à des fins de formation en Test/QA et automatisation des tests. Les données de vols et de réservations sont fictives.</p>
+
+                    <h5>4. Données Personnelles</h5>
+                    <p>Les données collectées lors de l'inscription ou de la réservation sont utilisées uniquement dans le cadre de ce projet de formation. Aucune donnée n'est transmise à des tiers.</p>
+
+                    <h5>5. Contact</h5>
+                    <p>Pour toute question, veuillez nous contacter à l'adresse : contact@nouvelair.com</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

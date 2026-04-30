@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+
+{% block title %}Mon Profil - {{ site_name }}{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row mb-4">
+        <div class="col-12">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'flights:home' %}">Accueil</a></li>
+                    <li class="breadcrumb-item active">Mon Profil</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-3">
+            <div class="card border-0 shadow-sm text-center mb-4">
+                <div class="card-body">
+                    <div class="bg-nouvelair text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width:80px;height:80px;">
+                        <i class="fas fa-user fa-2x"></i>
+                    </div>
+                    <h5>{{ user.get_full_name|default:user.username }}</h5>
+                    <p class="text-muted small">{{ user.email }}</p>
+                    <hr>
+                    <ul class="list-unstyled text-start small">
+                        <li class="mb-2"><a href="{% url 'bookings:my_bookings' %}" class="text-decoration-none"><i class="fas fa-suitcase me-2"></i>Mes Réservations</a></li>
+                        <li class="mb-2"><a href="#" class="text-decoration-none"><i class="fas fa-heart me-2"></i>Destinations favorites</a></li>
+                        <li class="mb-2"><a href="#" class="text-decoration-none"><i class="fas fa-cog me-2"></i>Paramètres</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-9">
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0"><i class="fas fa-user me-2"></i>Informations Personnelles</h5>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-4">
+                                <label class="form-label">Prénom</label>
+                                {{ user_form.first_name }}
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Nom</label>
+                                {{ user_form.last_name }}
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Email</label>
+                                {{ user_form.email }}
+                            </div>
+                        </div>
+
+                        <hr>
+                        <h6 class="mb-3">Informations complémentaires</h6>
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-4">
+                                <label class="form-label">Téléphone</label>
+                                {{ profile_form.phone }}
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Date de naissance</label>
+                                {{ profile_form.date_of_birth }}
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Genre</label>
+                                {{ profile_form.gender }}
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Nationalité</label>
+                                {{ profile_form.nationality }}
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Passeport</label>
+                                {{ profile_form.passport_number }}
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Ville</label>
+                                {{ profile_form.city }}
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Pays</label>
+                                {{ profile_form.country }}
+                            </div>
+                            <div class="col-md-8">
+                                <label class="form-label">Adresse</label>
+                                {{ profile_form.address }}
+                            </div>
+                            <div class="col-12">
+                                <div class="form-check">
+                                    {{ profile_form.newsletter }}
+                                    <label class="form-check-label" for="{{ profile_form.newsletter.id_for_label }}">
+                                        Je souhaite recevoir la newsletter et les offres promotionnelles
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-nouvelair">
+                            <i class="fas fa-save me-1"></i>Enregistrer les modifications
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

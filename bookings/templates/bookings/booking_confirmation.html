@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% block title %}Réservation Confirmée - {{ site_name }}{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="text-center mb-5">
+        <div class="bg-success bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width:100px;height:100px;">
+            <i class="fas fa-check-circle fa-3x text-success"></i>
+        </div>
+        <h1 class="fw-bold text-success">Réservation Confirmée !</h1>
+        <p class="text-muted">Votre réservation a été enregistrée avec succès.</p>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <!-- Référence -->
+            <div class="card mb-4 border-0 shadow-sm">
+                <div class="card-body text-center bg-nouvelair text-white rounded-3">
+                    <p class="mb-1">Référence de réservation</p>
+                    <h2 class="fw-bold">{{ booking.short_reference }}</h2>
+                    <p class="small mb-0">Conservez cette référence pour accéder à votre réservation</p>
+                </div>
+            </div>
+
+            <!-- Détails de la réservation -->
+            <div class="card mb-4 border-0 shadow-sm">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0"><i class="fas fa-info-circle me-2"></i>Détails de la Réservation</h5>
+                </div>
+                <div class="card-body">
+                    <table class="table">
+                        <tr><th>Contact</th><td>{{ booking.contact_email }}</td></tr>
+                        <tr><th>Téléphone</th><td>{{ booking.contact_phone }}</td></tr>
+                        <tr><th>Date</th><td>{{ booking.created_at|date:"d F Y à H:i" }}</td></tr>
+                        <tr><th>Montant total</th><td class="text-nouvelair fw-bold">{{ booking.total_amount }} TND</td></tr>
+                        {% if booking.special_requests %}
+                        <tr><th>Demandes spéciales</th><td>{{ booking.special_requests }}</td></tr>
+                        {% endif %}
+                    </table>
+                </div>
+            </div>
+
+            <!-- Passagers -->
+            <div class="card mb-4 border-0 shadow-sm">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0"><i class="fas fa-users me-2"></i>Passagers</h5>
+                </div>
+                <div class="card-body">
+                    {% for passenger in passengers %}
+                    <div class="row align-items-center {% if not forloop.first %}border-top pt-3{% endif %}">
+                        <div class="col-md-4">
+                            <strong>{{ passenger.get_title_display }} {{ passenger.first_name }} {{ passenger.last_name }}</strong>
+                        </div>
+                        <div class="col-md-4">
+                            <small class="text-muted">Vol {{ passenger.flight.flight_number }}</small><br>
+                            {{ passenger.flight.origin.code }} → {{ passenger.flight.destination.code }}
+                        </div>
+                        <div class="col-md-2">
+                            <span class="badge bg-nouvelair">{{ passenger.get_travel_class_display }}</span>
+                        </div>
+                        <div class="col-md-2 text-end">
+                            <strong>{{ passenger.price }} TND</strong>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="d-flex justify-content-between">
+                <a href="{% url 'flights:home' %}" class="btn btn-outline-secondary">
+                    <i class="fas fa-home me-1"></i>Retour à l'accueil
+                </a>
+                <a href="{% url 'bookings:detail' booking.reference %}" class="btn btn-nouvelair">
+                    <i class="fas fa-eye me-1"></i>Voir la réservation
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

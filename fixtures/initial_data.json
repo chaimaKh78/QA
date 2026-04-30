@@ -1,0 +1,164 @@
+[
+    {
+        "model": "auth.user",
+        "pk": 1,
+        "fields": {
+            "username": "admin",
+            "email": "admin@nouvelair.com",
+            "first_name": "Admin",
+            "last_name": "NouvelAir",
+            "is_staff": true,
+            "is_superuser": true,
+            "is_active": true,
+            "password": "pbkdf2_sha256$390000$randomsalt$hashedpassword"
+        }
+    },
+    {
+        "model": "flights.airport",
+        "pk": 1,
+        "fields": {
+            "code": "TUN",
+            "name": "Aéroport International Tunis-Carthage",
+            "city": "Tunis",
+            "country": "Tunisie",
+            "latitude": 36.8510,
+            "longitude": 10.2272,
+            "is_active": true,
+            "created_at": "2026-01-01T00:00:00Z"
+        }
+    },
+    {
+        "model": "flights.airport",
+        "pk": 2,
+        "fields": {
+            "code": "CDG",
+            "name": "Aéroport Charles de Gaulle",
+            "city": "Paris",
+            "country": "France",
+            "latitude": 49.0097,
+            "longitude": 2.5479,
+            "is_active": true,
+            "created_at": "2026-01-01T00:00:00Z"
+        }
+    },
+    {
+        "model": "flights.airport",
+        "pk": 3,
+        "fields": {
+            "code": "MIR",
+            "name": "Aéroport International Habib-Bourguiba",
+            "city": "Monastir",
+            "country": "Tunisie",
+            "latitude": 35.7643,
+            "longitude": 10.7563,
+            "is_active": true,
+            "created_at": "2026-01-01T00:00:00Z"
+        }
+    },
+    {
+        "model": "flights.airport",
+        "pk": 4,
+        "fields": {
+            "code": "NBE",
+            "name": "Aéroport International Enfidha-Hammamet",
+            "city": "Enfidha",
+            "country": "Tunisie",
+            "latitude": 36.0664,
+            "longitude": 10.4367,
+            "is_active": true,
+            "created_at": "2026-01-01T00:00:00Z"
+        }
+    },
+    {
+        "model": "flights.airport",
+        "pk": 5,
+        "fields": {
+            "code": "DJE",
+            "name": "Aéroport International Djerba-Zarzis",
+            "city": "Djerba",
+            "country": "Tunisie",
+            "latitude": 33.8833,
+            "longitude": 10.7750,
+            "is_active": true,
+            "created_at": "2026-01-01T00:00:00Z"
+        }
+    },
+    {
+        "model": "flights.airport",
+        "pk": 6,
+        "fields": {
+            "code": "ORY",
+            "name": "Aéroport d'Orly",
+            "city": "Paris",
+            "country": "France",
+            "latitude": 48.7262,
+            "longitude": 2.3649,
+            "is_active": true,
+            "created_at": "2026-01-01T00:00:00Z"
+        }
+    },
+    {
+        "model": "flights.airport",
+        "pk": 7,
+        "fields": {
+            "code": "MUC",
+            "name": "Aéroport de Munich",
+            "city": "Munich",
+            "country": "Allemagne",
+            "latitude": 48.3537,
+            "longitude": 11.7750,
+            "is_active": true,
+            "created_at": "2026-01-01T00:00:00Z"
+        }
+    },
+    {
+        "model": "flights.airport",
+        "pk": 8,
+        "fields": {
+            "code": "FRA",
+            "name": "Aéroport de Francfort",
+            "city": "Francfort",
+            "country": "Allemagne",
+            "latitude": 50.0379,
+            "longitude": 8.5622,
+            "is_active": true,
+            "created_at": "2026-01-01T00:00:00Z"
+        }
+    },
+    {
+        "model": "flights.aircraft",
+        "pk": 1,
+        "fields": {
+            "model_name": "Airbus A320-200",
+            "registration": "TS-INA",
+            "total_seats": 174,
+            "economy_seats": 150,
+            "business_seats": 24,
+            "is_active": true
+        }
+    },
+    {
+        "model": "flights.aircraft",
+        "pk": 2,
+        "fields": {
+            "model_name": "Airbus A321neo",
+            "registration": "TS-INC",
+            "total_seats": 220,
+            "economy_seats": 192,
+            "business_seats": 28,
+            "is_active": true
+        }
+    },
+    {
+        "model": "flights.aircraft",
+        "pk": 3,
+        "fields": {
+            "model_name": "Boeing 737-800",
+            "registration": "TS-IND",
+            "total_seats": 189,
+            "economy_seats": 165,
+            "business_seats": 24,
+            "is_active": true
+        }
+    }
+]

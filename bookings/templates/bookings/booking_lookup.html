@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block title %}Rechercher ma Réservation - {{ site_name }}{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="text-center mb-5">
+                <i class="fas fa-search fa-3x text-nouvelair mb-3"></i>
+                <h2>Retrouvez votre réservation</h2>
+                <p class="text-muted">Entrez votre référence de réservation et votre email pour accéder aux détails.</p>
+            </div>
+
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-5">
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">Référence de réservation</label>
+                            <input type="text" name="reference" class="form-control form-control-lg text-center"
+                                   placeholder="Ex: ABC12345" required style="letter-spacing: 2px; font-size: 1.5rem;">
+                            <small class="text-muted">Les 8 premiers caractères de votre référence</small>
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">Email de contact</label>
+                            <input type="email" name="email" class="form-control form-control-lg"
+                                   placeholder="votre@email.com" required>
+                        </div>
+                        <button type="submit" class="btn btn-nouvelair btn-lg w-100">
+                            <i class="fas fa-search me-2"></i>Rechercher
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="mt-5">
+                <h5 class="text-center mb-3">Comment trouver votre référence ?</h5>
+                <div class="row">
+                    <div class="col-md-4 text-center mb-3">
+                        <div class="bg-light rounded-circle d-inline-flex align-items-center justify-content-center mb-2" style="width:60px;height:60px;">
+                            <i class="fas fa-envelope text-nouvelair fa-lg"></i>
+                        </div>
+                        <p class="small text-muted">Vérifiez votre email de confirmation</p>
+                    </div>
+                    <div class="col-md-4 text-center mb-3">
+                        <div class="bg-light rounded-circle d-inline-flex align-items-center justify-content-center mb-2" style="width:60px;height:60px;">
+                            <i class="fas fa-sms text-nouvelair fa-lg"></i>
+                        </div>
+                        <p class="small text-muted">Consultez vos SMS de confirmation</p>
+                    </div>
+                    <div class="col-md-4 text-center mb-3">
+                        <div class="bg-light rounded-circle d-inline-flex align-items-center justify-content-center mb-2" style="width:60px;height:60px;">
+                            <i class="fas fa-user-circle text-nouvelair fa-lg"></i>
+                        </div>
+                        <p class="small text-muted">Connectez-vous à votre espace client</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

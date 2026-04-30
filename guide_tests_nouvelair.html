@@ -1,0 +1,1466 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guide des Tests - NouvelAir | Jour 1 &agrave; Jour 10</title>
+    <style>
+        :root {
+            --primary: #1B4965;
+            --primary-light: #2D6A8F;
+            --accent: #E8871E;
+            --accent-light: #F5A623;
+            --bg: #F8FAFC;
+            --bg-card: #FFFFFF;
+            --bg-code: #1E293B;
+            --text: #1F2937;
+            --text-muted: #64748B;
+            --border: #E2E8F0;
+            --success: #059669;
+            --warning: #D97706;
+            --error: #DC2626;
+            --skip: #7C3AED;
+            --tag-unit: #3B82F6;
+            --tag-integration: #10B981;
+            --tag-api: #8B5CF6;
+            --tag-security: #EF4444;
+            --tag-e2e: #F59E0B;
+            --tag-regression: #6366F1;
+            --tag-smoke: #6B7280;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.625;
+            font-size: 15px;
+        }
+
+        /* ── Header ── */
+        .header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+            padding: 48px 32px 40px;
+            text-align: center;
+        }
+        .header h1 {
+            font-size: 2.25rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+        }
+        .header .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.85;
+            max-width: 640px;
+            margin: 0 auto 24px;
+        }
+        .header .stats {
+            display: flex;
+            justify-content: center;
+            gap: 32px;
+            flex-wrap: wrap;
+            margin-top: 24px;
+        }
+        .header .stat {
+            text-align: center;
+        }
+        .header .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+        }
+        .header .stat-label {
+            font-size: 0.8rem;
+            opacity: 0.75;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* ── Navigation ── */
+        .nav {
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 32px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+        .nav-inner {
+            display: flex;
+            gap: 8px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .nav a {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            border-radius: 8px;
+            text-decoration: none;
+            color: var(--text-muted);
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.15s;
+        }
+        .nav a:hover, .nav a.active {
+            background: var(--primary);
+            color: white;
+        }
+        .nav a .badge {
+            background: rgba(255,255,255,0.2);
+            color: inherit;
+            font-size: 0.7rem;
+            padding: 1px 7px;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+        .nav a:hover .badge, .nav a.active .badge {
+            background: rgba(255,255,255,0.25);
+        }
+
+        /* ── Main ── */
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 32px 24px 64px;
+        }
+
+        /* ── Day Section ── */
+        .day-section {
+            margin-bottom: 48px;
+        }
+        .day-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid var(--border);
+        }
+        .day-number {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 56px;
+            height: 56px;
+            border-radius: 14px;
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: white;
+            flex-shrink: 0;
+        }
+        .day-info h2 {
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 2px;
+        }
+        .day-info .day-desc {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+        .day-tags {
+            display: flex;
+            gap: 6px;
+            margin-left: auto;
+            flex-wrap: wrap;
+        }
+
+        /* ── Tags ── */
+        .tag {
+            display: inline-flex;
+            align-items: center;
+            padding: 3px 10px;
+            border-radius: 6px;
+            font-size: 0.72rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .tag-unit { background: #EFF6FF; color: var(--tag-unit); }
+        .tag-integration { background: #F0FDF4; color: var(--tag-integration); }
+        .tag-api { background: #F5F3FF; color: var(--tag-api); }
+        .tag-security { background: #FEF2F2; color: var(--tag-security); }
+        .tag-e2e { background: #FFFBEB; color: var(--tag-e2e); }
+        .tag-regression { background: #EEF2FF; color: var(--tag-regression); }
+        .tag-smoke { background: #F3F4F6; color: var(--tag-smoke); }
+
+        /* ── File Card ── */
+        .file-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            margin-bottom: 16px;
+            overflow: hidden;
+            transition: box-shadow 0.15s;
+        }
+        .file-card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+        }
+        .file-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 20px;
+            background: linear-gradient(to right, #F8FAFC, #F1F5F9);
+            border-bottom: 1px solid var(--border);
+        }
+        .file-card-header .file-path {
+            font-family: 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+            font-size: 0.85rem;
+            color: var(--primary);
+            font-weight: 600;
+        }
+        .file-card-header .test-count {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            background: white;
+            padding: 3px 10px;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+        }
+        .file-card-body {
+            padding: 0;
+        }
+
+        /* ── Command Block ── */
+        .cmd-block {
+            margin: 0 20px;
+            padding: 10px 16px;
+            background: var(--bg-code);
+            color: #E2E8F0;
+            border-radius: 8px;
+            font-family: 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+            font-size: 0.82rem;
+            margin-top: 16px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            position: relative;
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+        .cmd-block .prompt {
+            color: #10B981;
+            user-select: none;
+        }
+        .cmd-block .cmd {
+            color: #F1F5F9;
+        }
+        .cmd-block .copy-btn {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255,255,255,0.1);
+            border: none;
+            color: #94A3B8;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+        .cmd-block .copy-btn:hover {
+            background: rgba(255,255,255,0.2);
+            color: white;
+        }
+
+        /* ── Test Table ── */
+        .test-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .test-table th {
+            text-align: left;
+            padding: 10px 20px;
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: var(--text-muted);
+            background: #FAFBFC;
+            border-bottom: 1px solid var(--border);
+            font-weight: 600;
+        }
+        .test-table td {
+            padding: 12px 20px;
+            border-bottom: 1px solid #F1F5F9;
+            vertical-align: top;
+        }
+        .test-table tr:last-child td {
+            border-bottom: none;
+        }
+        .test-table tr:hover td {
+            background: #FAFBFC;
+        }
+        .test-name {
+            font-family: 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+            font-size: 0.82rem;
+            color: var(--primary);
+            font-weight: 500;
+        }
+        .test-desc {
+            font-size: 0.88rem;
+            color: var(--text);
+            margin-top: 2px;
+        }
+        .test-class {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            font-style: italic;
+        }
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 0.72rem;
+            font-weight: 600;
+            padding: 3px 10px;
+            border-radius: 10px;
+        }
+        .status-pass { background: #F0FDF4; color: var(--success); }
+        .status-skip { background: #FFFBEB; color: var(--warning); }
+        .status-xfail { background: #F5F3FF; color: var(--skip); }
+
+        /* ── Footer ── */
+        .footer {
+            text-align: center;
+            padding: 32px;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            border-top: 1px solid var(--border);
+            background: var(--bg-card);
+        }
+        .footer code {
+            background: #F1F5F9;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Cascadia Code', monospace;
+            font-size: 0.82rem;
+        }
+
+        /* ── Responsive ── */
+        @media (max-width: 768px) {
+            .header h1 { font-size: 1.6rem; }
+            .header .stats { gap: 20px; }
+            .day-header { flex-direction: column; align-items: flex-start; }
+            .day-tags { margin-left: 0; }
+            .test-table th:nth-child(3), .test-table td:nth-child(3) { display: none; }
+            .cmd-block { font-size: 0.72rem; }
+        }
+
+        /* ── Day Color Palette ── */
+        .day-1 .day-number { background: #1B4965; }
+        .day-2 .day-number { background: #234E70; }
+        .day-3 .day-number { background: #2D6A8F; }
+        .day-4 .day-number { background: #3A7CA5; }
+        .day-5 .day-number { background: #E8871E; }
+        .day-6 .day-number { background: #2563EB; }
+        .day-7 .day-number { background: #7C3AED; }
+        .day-8 .day-number { background: #DC2626; }
+        .day-9 .day-number { background: #059669; }
+        .day-10 .day-number { background: #475569; }
+
+        /* ── Scrollbar ── */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94A3B8; }
+
+        /* ── Tooltip ── */
+        .info-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #E2E8F0;
+            color: var(--text-muted);
+            font-size: 0.65rem;
+            font-weight: 700;
+            cursor: help;
+            margin-left: 4px;
+        }
+    </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<!-- HEADER                                                               -->
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<div class="header">
+    <h1>NouvelAir &mdash; Guide des Tests</h1>
+    <p class="subtitle">Plan de test complet du Jour 1 au Jour 10 &mdash; Ex&eacute;cution pas &agrave; pas pour chaque module</p>
+    <div class="stats">
+        <div class="stat">
+            <div class="stat-value">229</div>
+            <div class="stat-label">Tests</div>
+        </div>
+        <div class="stat">
+            <div class="stat-value">18</div>
+            <div class="stat-label">Fichiers</div>
+        </div>
+        <div class="stat">
+            <div class="stat-value">10</div>
+            <div class="stat-label">Jours</div>
+        </div>
+        <div class="stat">
+            <div class="stat-value" style="color:#10B981;">98.7%</div>
+            <div class="stat-label">R&eacute;ussite</div>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<!-- NAVIGATION                                                           -->
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<div class="nav">
+    <div class="nav-inner">
+        <a href="#jour-1">Jour 1 <span class="badge">6</span></a>
+        <a href="#jour-2">Jour 2 <span class="badge">18</span></a>
+        <a href="#jour-3">Jour 3 <span class="badge">30</span></a>
+        <a href="#jour-4">Jour 4 <span class="badge">42</span></a>
+        <a href="#jour-5">Jour 5 <span class="badge">31</span></a>
+        <a href="#jour-6">Jour 6 <span class="badge">5</span></a>
+        <a href="#jour-7">Jour 7 <span class="badge">8</span></a>
+        <a href="#jour-8">Jour 8 <span class="badge">30</span></a>
+        <a href="#jour-9">Jour 9 <span class="badge">62</span></a>
+        <a href="#jour-10">Jour 10 <span class="badge">3</span></a>
+    </div>
+</div>
+
+<div class="container">
+
+<!-- ═══════════════════════════════════════════════════════════════════════════ -->
+<!-- JOUR 1 — Mod&egrave;les : Comptes utilisateurs                          -->
+<!-- ═══════════════════════════════════════════════════════════════════════════ -->
+<section class="day-section day-1" id="jour-1">
+    <div class="day-header">
+        <div class="day-number">1</div>
+        <div class="day-info">
+            <h2>Mod&egrave;les &mdash; Comptes Utilisateurs</h2>
+            <div class="day-desc">Tests unitaires du mod&egrave;le UserProfile : cr&eacute;ation, signal auto, full_name, relation OneToOne</div>
+        </div>
+        <div class="day-tags">
+            <span class="tag tag-unit">Unit</span>
+        </div>
+    </div>
+
+    <div class="file-card">
+        <div class="file-card-header">
+            <span class="file-path">tests/unit/test_models_accounts.py</span>
+            <span class="test-count">6 tests</span>
+        </div>
+        <div class="file-card-body">
+            <div class="cmd-block">
+                <span class="prompt">$</span>
+                <span class="cmd">python -m pytest tests/unit/test_models_accounts.py -v</span>
+                <button class="copy-btn" onclick="copyCmd(this)">Copier</button>
+            </div>
+            <table class="test-table">
+                <thead><tr><th>Test</th><th>Description</th><th>Statut</th></tr></thead>
+                <tbody>
+                    <tr>
+                        <td><span class="test-class">TestUserProfile</span><br><span class="test-name">test_profile_creation</span></td>
+                        <td class="test-desc">Cr&eacute;ation d'un profil utilisateur avec tous les champs (phone, ville, pays, date de naissance, genre, passeport).</td>
+                        <td><span class="status-badge status-pass">&#10003; OK</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="test-class">TestUserProfile</span><br><span class="test-name">test_profile_auto_creation</span></td>
+                        <td class="test-desc">Le signal <code>post_save</code> cr&eacute;e automatiquement un profil &agrave; chaque nouvel utilisateur.</td>
+                        <td><span class="status-badge status-pass">&#10003; OK</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="test-class">TestUserProfile</span><br><span class="test-name">test_profile_full_name</span></td>
+                        <td class="test-desc">La propri&eacute;t&eacute; <code>full_name</code> retourne <code>first_name + last_name</code>.</td>
+                        <td><span class="status-badge status-pass">&#10003; OK</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="test-class">TestUserProfile</span><br><span class="test-name">test_profile_without_full_name</span></td>
+                        <td class="test-desc">Si pas de nom complet, <code>full_name</code> retourne le username.</td>
+                        <td><span class="status-badge status-pass">&#10003; OK</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="test-class">TestUserProfile</span><br><span class="test-name">test_profile_one_to_one_user</span></td>
+                        <td class="test-desc">Relation OneToOne entre User et UserProfile : acc&egrave;s depuis l'utilisateur, impossibilit&eacute; de cr&eacute;er un doublon.</td>
+                        <td><span class="status-badge status-pass">&#10003; OK</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="test-class">TestUserProfile</span><br><span class="test-name">test_profile_newsletter_default</span></td>
+                        <td class="test-desc">Le champ <code>newsletter</code> est <code>False</code> par d&eacute;faut.</td>
+                        <td><span class="status-badge status-pass">&#10003; OK</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════════════ -->
+<!-- JOUR 2 — Mod&egrave;les : Vols                                         -->
+<!-- ═══════════════════════════════════════════════════════════════════════════ -->
+<section class="day-section day-2" id="jour-2">
+    <div class="day-header">
+        <div class="day-number">2</div>
+        <div class="day-info">
+            <h2>Mod&egrave;les &mdash; Vols (Airport, Aircraft, Flight)</h2>
+            <div class="day-desc">Tests unitaires des mod&egrave;les Airport, Aircraft et Flight : cr&eacute;ation, contraintes, recherche de vols</div>
+        </div>
+        <div class="day-tags">
+            <span class="tag tag-unit">Unit</span>
+        </div>
+    </div>
+
+    <div class="file-card">
+        <div class="file-card-header">
+            <span class="file-path">tests/unit/test_models_flights.py</span>
+            <span class="test-count">24 tests (30 avec param&eacute;trisation)</span>
+        </div>
+        <div class="file-card-body">
+            <div class="cmd-block">
+                <span class="prompt">$</span>
+                <span class="cmd">python -m pytest tests/unit/test_models_flights.py -v</span>
+                <button class="copy-btn" onclick="copyCmd(this)">Copier</button>
+            </div>
+            <table class="test-table">
+                <thead><tr><th>Test</th><th>Description</th><th>Statut</th></tr></thead>
+                <tbody>
+                    <tr><td colspan="3" style="padding:8px 20px 4px;"><strong style="color:var(--tag-unit);">TestAirport (7 tests)</strong></td></tr>
+                    <tr>
+                        <td><span class="test-name">test_airport_creation</span></td>
+                        <td class="test-desc">Cr&eacute;ation d'un a&eacute;roport avec code, nom, ville, pays, latitude, longitude.</td>
+                        <td><span class="status-badge status-pass">&#10003; OK</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="test-name">test_airport_str</span></td>
+                        <td class="test-desc"><code>__str__</code> retourne le format <code>CODE - City (Country)</code>.</td>
+                        <td><span class="status-badge status-pass">&#10003; OK</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="test-name">test_airport_code_unique</span></td>
+                        <td class="test-desc">Le code IATA est unique &mdash; <code>IntegrityError</code> en cas de doublon.</td>
+                        <td><span class="status-badge status-skip">&#9888; SKIP</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="test-name">test_airport_ordering</span></td>
+                        <td class="test-desc">Le tri par d&eacute;faut est par code IATA.</td>
+                        <td><span class="status-badge status-pass">&#10003; OK</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="test-name">test_airport_latitude_longitude_decimal</span></td>
+                        <td class="test-desc">Les coordonn&eacute;es sont stock&eacute;es comme <code>DecimalField</code>.</td>
+                        <td><span class="status-badge status-pass">&#10003; OK</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="test-name">test_airport_is_active_default</span></td>
+                        <td class="test-desc"><code>is_active</code> est <code>True</code> par d&eacute;faut.</td>
+                        <td><span class="status-badge status-pass">&#10003; OK</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="test-name">test_airport_cannot_be_created_without_code</span></td>
+                        <td class="test-desc">Un a&eacute;roport ne peut pas &ecirc;tre cr&eacute;&eacute; sans code (<code>null=False</code>).</td>
+                        <td><span class="status-badge status-pass">&#10003; OK</span></td>
+                    </tr>
+
+                    <tr><td colspan="3" style="padding:8px 20px 4px;"><strong style="color:var(--tag-unit);">TestAircraft (6 tests)</strong></td></tr>
+                    <tr>
+                        <td><span class="test-name">test_aircraft_creation</span></td>
+                        <td class="test-desc">Cr&eacute;ation d'un a&eacute;ronef avec mod&egrave;le, immatriculation, si&egrave;ges &eacute;conomie/affaires.</td>
+                        <td><span class="status-badge status-pass">&#10003; OK</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="test-name">test_aircraft_str</span></td>
+                        <td class="test-desc"><code>__str__</code> retourne <code>model_name (registration)</code>.</td>
+                        <td><span class="status-badge status-pass">&#10003; OK</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="test-name">test_aircraft_registration_unique</span></td>
+                        <td class="test-desc">L'immatriculation est unique.</td>
+                        <td><span class="status-badge status-pass">&#10003; OK</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="test-name">test_seats_sum</span></td>
+                        <td class="test-desc"><code>economy_seats + business_seats == total_seats</code>.</td>
+                        <td><span class="status-badge status-pass">&#10003; OK</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="test-name">test_aircraft_is_active</span></td>
+                        <td class="test-desc">Test du champ <code>is_active</code>.</td>
+                        <td><span class="status-badge status-pass">&#10003; OK</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="test-name">test_aircraft_economy_seats_positive</span></td>
+                        <td class="test-desc">Les si&egrave;ges &eacute;conomiques sont un entier positif.</td>
+                        <td><span class="status-badge status-pass">&#10003; OK</span></td>
+                    </tr>
+
+                    <tr><td colspan="3" style="padding:8px 20px 4px;"><strong style="color:var(--tag-unit);">TestFlight (11 tests, 2 skip)</strong></td></tr>
+                    <tr>
+                        <td><span class="test-name">test_flight_creation</span></td>
+                        <td class="test-desc">Cr&eacute;ation d'un vol avec tous les champs (num&eacute;ro, origine, destination, a&eacute;ronef, dates, prix).</td>
+                        <td><span class="status-badge status-pass">&#10003; OK</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="test-name">test_flight_str</span></td>
+                        <td class="test-desc"><code>__str__</code> contient le num&eacute;ro de vol et les codes a&eacute;roports.</td>
+                        <td><span class="status-badge status-pass">&#10003; OK</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="test-name">test_flight_number_unique</span></td>
+                        <td class="test-desc">Le num&eacute;ro de vol est unique.</td>
+                        <td><span class="status-badge status-pass">&#10003; OK</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="test-name">test_flight_status_choices</span></td>
+                        <td class="test-desc">Tous les statuts valides accept&eacute;s (param&eacute;tr&eacute; : scheduled, boarding, in_flight, arrived, delayed, cancelled).</td>
+                        <td><span class="status-badge status-pass">&#10003; OK</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="test-name">test_flight_invalid_status_raises_error</span></td>
+                        <td class="test-desc">Un statut invalide l&egrave;ve une erreur.</td>
+                        <td><span class="status-badge status-pass">&#10003; OK</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="test-name">test_flight_duration_auto_calculation</span></td>
+                        <td class="test-desc">La dur&eacute;e est calcul&eacute;e automatiquement (<code>arrival_time - departure_time</code>).</td>
+                        <td><span class="status-badge status-pass">&#10003; OK</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="test-name">test_flight_search</span></td>
+                        <td class="test-desc">M&eacute;thode <code>search_flights</code> : filtre par origine, destination, date, si&egrave;ges disponibles.</td>
+                        <td><span class="status-badge status-pass">&#10003; OK</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="test-name">test_flight_search_no_results</span></td>
+                        <td class="test-desc"><code>search_flights</code> retourne un QuerySet vide si aucun vol ne correspond.</td>
+                        <td><span class="status-badge status-pass">&#10003; OK</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="test-name">test_get_current_price_economy</span></td>
+                        <td class="test-desc">Prix dynamique &eacute;conomie sans promotion.</td>
+                        <td><span class="status-badge status-pass">&#10003; OK</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="test-name">test_get_current_price_business</span></td>
+                        <td class="test-desc">Prix dynamique affaires sans promotion.</td>
+                        <td><span class="status-badge status-pass">&#10003; OK</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="test-name">test_flight_default_status_scheduled</span></td>
+                        <td class="test-desc">Le statut par d&eacute;faut est <code>scheduled</code>.</td>
+                        <td><span class="status-badge status-skip">&#9888; SKIP</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════════════ -->
+<!-- JOUR 3 — Mod&egrave;les : R&eacute;servations, Paiements, Passagers           -->
+<!-- ═══════════════════════════════════════════════════════════════════════════ -->
+<section class="day-section day-3" id="jour-3">
+    <div class="day-header">
+        <div class="day-number">3</div>
+        <div class="day-info">
+            <h2>Mod&egrave;les &mdash; R&eacute;servations, Passagers, Paiements</h2>
+            <div class="day-desc">Tests unitaires des mod&egrave;les Booking, Passenger et Payment : cr&eacute;ation, statuts, choix param&eacute;tr&eacute;s</div>
+        </div>
+        <div class="day-tags">
+            <span class="tag tag-unit">Unit</span>
+        </div>
+    </div>
+
+    <div class="file-card">
+        <div class="file-card-header">
+            <span class="file-path">tests/unit/test_models_bookings.py</span>
+            <span class="test-count">18 tests (32 cas avec param&eacute;trisation)</span>
+        </div>
+        <div class="file-card-body">
+            <div class="cmd-block">
+                <span class="prompt">$</span>
+                <span class="cmd">python -m pytest tests/unit/test_models_bookings.py -v</span>
+                <button class="copy-btn" onclick="copyCmd(this)">Copier</button>
+            </div>
+            <table class="test-table">
+                <thead><tr><th>Test</th><th>Description</th><th>Statut</th></tr></thead>
+                <tbody>
+                    <tr><td colspan="3" style="padding:8px 20px 4px;"><strong style="color:var(--tag-unit);">TestBooking (8 tests)</strong></td></tr>
+                    <tr>
+                        <td><span class="test-name">test_booking_creation</span></td>
+                        <td class="test-desc">Cr&eacute;ation d'une r&eacute;servation avec email, t&eacute;l&eacute;phone, statut, montant, demandes sp&eacute;ciales.</td>
+                        <td><span class="status-badge status-pass">&#10003; OK</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="test-name">test_booking_reference_unique</span></td>
+                        <td class="test-desc">La r&eacute;f&eacute;rence (UUID) est unique.</td>
+                        <td><span class="status-badge status-pass">&#10003; OK</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="test-name">test_booking_status_choices</span></td>
+                        <td class="test-desc">Tous les statuts accept&eacute;s (param&eacute;tr&eacute; : pending, confirmed, cancelled, completed, refunded).</td>
+                        <td><span class="status-badge status-pass">&#10003; OK</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="test-name">test_booking_str</span></td>
+                        <td class="test-desc"><code>__str__</code> contient la r&eacute;f&eacute;rence courte et le statut.</td>
+                        <td><span class="status-badge status-pass">&#10003; OK</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="test-name">test_booking_travel_class_via_passenger</span></td>
+                        <td class="test-desc">La classe de voyage est d&eacute;finie au niveau passager.</td>
+                        <td><span class="status-badge status-pass">&#10003; OK</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="test-name">test_booking_default_status_pending</span></td>
+                        <td class="test-desc">Le statut par d&eacute;faut est <code>pending</code>.</td>
+                        <td><span class="status-badge status-pass">&#10003; OK</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="test-name">test_booking_created_at_auto</span></td>
+                        <td class="test-desc"><code>created_at</code> est automatiquement renseign&eacute;.</td>
+                        <td><span class="status-badge status-pass">&#10003; OK</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="test-name">test_booking_total_amount_calculation</span></td>
+                        <td class="test-desc">Test du champ <code>total_amount</code>.</td>
+                        <td><span class="status-badge status-pass">&#10003; OK</span></td>
+                    </tr>
+
+                    <tr><td colspan="3" style="padding:8px 20px 4px;"><strong style="color:var(--tag-unit);">TestPassenger (5 tests)</strong></td></tr>
+                    <tr>
+                        <td><span class="test-name">test_passenger_creation</span></td>
+                        <td class="test-desc">Cr&eacute;ation d'un passager avec titre, nom, date de naissance, passeport, classe, si&egrave;ge, prix.</td>
+                        <td><span class="status-badge status-pass">&#10003; OK</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="test-name">test_passenger_title_choices</span></td>
+                        <td class="test-desc">Titres accept&eacute;s (param&eacute;tr&eacute; : mr, mme, mll, enf).</td>
+                        <td><span class="status-badge status-pass">&#10003; OK</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="test-name">test_passenger_str</span></td>
+                        <td class="test-desc"><code>__str__</code> retourne titre, pr&eacute;nom et nom.</td>
+                        <td><span class="status-badge status-pass">&#10003; OK</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="test-name">test_passenger_passport_number_optional</span></td>
+                        <td class="test-desc">Le num&eacute;ro de passeport est optionnel (<code>blank=True</code>).</td>
+                        <td><span class="status-badge status-pass">&#10003; OK</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="test-name">test_passenger_date_of_birth</span></td>
+                        <td class="test-desc">La date de naissance est correctement stock&eacute;e.</td>
+                        <td><span class="status-badge status-pass">&#10003; OK</span></td>
+                    </tr>
+
+                    <tr><td colspan="3" style="padding:8px 20px 4px;"><strong style="color:var(--tag-unit);">TestPayment (5 tests)</strong></td></tr>
+                    <tr>
+                        <td><span class="test-name">test_payment_creation</span></td>
+                        <td class="test-desc">Cr&eacute;ation d'un paiement avec montant, m&eacute;thode, statut, transaction_id.</td>
+                        <td><span class="status-badge status-pass">&#10003; OK</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="test-name">test_payment_method_choices</span></td>
+                        <td class="test-desc">M&eacute;thodes accept&eacute;es (param&eacute;tr&eacute; : credit_card, paypal, bank_transfer, cash).</td>
+                        <td><span class="status-badge status-pass">&#10003; OK</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="test-name">test_payment_status_choices</span></td>
+                        <td class="test-desc">Statuts accept&eacute;s (param&eacute;tr&eacute; : pending, completed, failed, refunded).</td>
+                        <td><span class="status-badge status-pass">&#10003; OK</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="test-name">test_payment_str</span></td>
+                        <td class="test-desc"><code>__str__</code> contient le montant et le statut.</td>
+                        <td><span class="status-badge status-pass">&#10003; OK</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="test-name">test_payment_transaction_id_optional</span></td>
+                        <td class="test-desc">Le <code>transaction_id</code> est optionnel (<code>blank=True</code>).</td>
+                        <td><span class="status-badge status-pass">&#10003; OK</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════════════ -->
+<!-- JOUR 4 — Tests d'int&eacute;gration : Vues                               -->
+<!-- ═══════════════════════════════════════════════════════════════════════════ -->
+<section class="day-section day-4" id="jour-4">
+    <div class="day-header">
+        <div class="day-number">4</div>
+        <div class="day-info">
+            <h2>Tests d'Int&eacute;gration &mdash; Vues Django</h2>
+            <div class="day-desc">Tests de toutes les vues : comptes, r&eacute;servations, vols, destinations, promotions</div>
+        </div>
+        <div class="day-tags">
+            <span class="tag tag-integration">Int&eacute;gration</span>
+        </div>
+    </div>
+
+    <div class="file-card">
+        <div class="file-card-header">
+            <span class="file-path">tests/integration/test_views_accounts.py</span>
+            <span class="test-count">10 tests</span>
+        </div>
+        <div class="file-card-body">
+            <div class="cmd-block">
+                <span class="prompt">$</span>
+                <span class="cmd">python -m pytest tests/integration/test_views_accounts.py -v</span>
+                <button class="copy-btn" onclick="copyCmd(this)">Copier</button>
+            </div>
+            <table class="test-table">
+                <thead><tr><th>Test</th><th>Description</th><th>Statut</th></tr></thead>
+                <tbody>
+                    <tr><td><span class="test-name">test_login_page</span></td><td class="test-desc">GET page de connexion retourne 200 avec le formulaire.</td><td><span class="status-badge status-pass">&#10003; OK</span></td></tr>
+                    <tr><td><span class="test-name">test_login_success</span></td><td class="test-desc">POST avec identifiants valides redirige vers l'accueil.</td><td><span class="status-badge status-pass">&#10003; OK</span></td></tr>
+                    <tr><td><span class="test-name">test_login_invalid</span></td><td class="test-desc">POST avec mauvais mot de passe renvoie une erreur.</td><td><span class="status-badge status-pass">&#10003; OK</span></td></tr>
+                    <tr><td><span class="test-name">test_register_page</span></td><td class="test-desc">GET page d'inscription retourne 200.</td><td><span class="status-badge status-pass">&#10003; OK</span></td></tr>
+                    <tr><td><span class="test-name">test_register_success</span></td><td class="test-desc">POST avec donn&eacute;es valides cr&eacute;e utilisateur + profil et connecte.</td><td><span class="status-badge status-pass">&#10003; OK</span></td></tr>
+                    <tr><td><span class="test-name">test_register_duplicate_email</span></td><td class="test-desc">Email d&eacute;j&agrave; utilis&eacute; renvoie une erreur.</td><td><span class="status-badge status-pass">&#10003; OK</span></td></tr>
+                    <tr><td><span class="test-name">test_logout</span></td><td class="test-desc">GET logout d&eacute;connecte et redirige vers l'accueil.</td><td><span class="status-badge status-pass">&#10003; OK</span></td></tr>
+                    <tr><td><span class="test-name">test_profile_requires_login</span></td><td class="test-desc">Profil sans auth redirige vers la page de connexion.</td><td><span class="status-badge status-pass">&#10003; OK</span></td></tr>
+                    <tr><td><span class="test-name">test_profile_authenticated</span></td><td class="test-desc">Profil avec utilisateur authentifi&eacute; retourne 200.</td><td><span class="status-badge status-pass">&#10003; OK</span></td></tr>
+                    <tr><td><span class="test-name">test_profile_update</span></td><td class="test-desc">POST avec donn&eacute;es valides met &agrave; jour le profil.</td><td><span class="status-badge status-pass">&#10003; OK</span></td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="file-card">
+        <div class="file-card-header">
+            <span class="file-path">tests/integration/test_views_flights.py</span>
+            <span class="test-count">15 tests</span>
+        </div>
+        <div class="file-card-body">
+            <div class="cmd-block">
+                <span class="prompt">$</span>
+                <span class="cmd">python -m pytest tests/integration/test_views_flights.py -v</span>
+                <button class="copy-btn" onclick="copyCmd(this)">Copier</button>
+            </div>
+            <table class="test-table">
+                <thead><tr><th>Test</th><th>Description</th><th>Statut</th></tr></thead>
+                <tbody>
+                    <tr><td><span class="test-name">test_home_view_status</span></td><td class="test-desc">GET <code>/</code> retourne 200.</td><td><span class="status-badge status-pass">&#10003; OK</span></td></tr>
+                    <tr><td><span class="test-name">test_home_view_template</span></td><td class="test-desc">La page d'accueil utilise les bons templates.</td><td><span class="status-badge status-pass">&#10003; OK</span></td></tr>
+                    <tr><td><span class="test-name">test_home_view_contains_form</span></td><td class="test-desc">Le contexte contient le <code>FlightSearchForm</code>.</td><td><span class="status-badge status-pass">&#10003; OK</span></td></tr>
+                    <tr><td><span class="test-name">test_home_view_popular_destinations</span></td><td class="test-desc">Le contexte contient <code>popular_destinations</code>.</td><td><span class="status-badge status-pass">&#10003; OK</span></td></tr>
+                    <tr><td><span class="test-name">test_home_view_upcoming_flights</span></td><td class="test-desc">Le contexte contient <code>upcoming_flights</code>.</td><td><span class="status-badge status-pass">&#10003; OK</span></td></tr>
+                    <tr><td><span class="test-name">test_search_flight_post</span></td><td class="test-desc">POST avec param&egrave;tres valides redirige vers <code>search_results</code>.</td><td><span class="status-badge status-pass">&#10003; OK</span></td></tr>
+                    <tr><td><span class="test-name">test_search_same_airport_error</span></td><td class="test-desc">M&ecirc;me a&eacute;roport origine/destination renvoie erreur.</td><td><span class="status-badge status-pass">&#10003; OK</span></td></tr>
+                    <tr><td><span class="test-name">test_search_past_date_error</span></td><td class="test-desc">Date pass&eacute;e renvoie erreur de validation.</td><td><span class="status-badge status-pass">&#10003; OK</span></td></tr>
+                    <tr><td><span class="test-name">test_flight_detail_view</span></td><td class="test-desc">GET <code>/vol/&lt;num&gt;/</code> pour un vol existant retourne 200.</td><td><span class="status-badge status-pass">&#10003; OK</span></td></tr>
+                    <tr><td><span class="test-name">test_flight_detail_view_404</span></td><td class="test-desc">GET <code>/vol/&lt;inexistant&gt;/</code> retourne 404.</td><td><span class="status-badge status-pass">&#10003; OK</span></td></tr>
+                    <tr><td><span class="test-name">test_airport_list_view</span></td><td class="test-desc">GET <code>/aeroports/</code> retourne 200 avec contexte <code>airports</code>.</td><td><span class="status-badge status-pass">&#10003; OK</span></td></tr>
+                    <tr><td><span class="test-name">test_airport_autocomplete</span></td><td class="test-desc">GET <code>/api/airports/autocomplete/?q=TU</code> retourne JSON.</td><td><span class="status-badge status-pass">&#10003; OK</span></td></tr>
+                    <tr><td><span class="test-name">test_airport_autocomplete_empty</span></td><td class="test-desc">Query vide retourne liste JSON vide.</td><td><span class="status-badge status-pass">&#10003; OK</span></td></tr>
+                    <tr><td><span class="test-name">test_flight_search_results</span></td><td class="test-desc">GET <code>/recherche/</code> avec param&egrave;tres en session retourne des r&eacute;sultats.</td><td><span class="status-badge status-pass">&#10003; OK</span></td></tr>
+                    <tr><td><span class="test-name">test_flight_search_results_no_params</span></td><td class="test-desc">Sans param&egrave;tres en session retourne page vide.</td><td><span class="status-badge status-pass">&#10003; OK</span></td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="file-card">
+        <div class="file-card-header">
+            <span class="file-path">tests/integration/test_views_bookings.py</span>
+            <span class="test-count">7 tests</span>
+        </div>
+        <div class="file-card-body">
+            <div class="cmd-block">
+                <span class="prompt">$</span>
+                <span class="cmd">python -m pytest tests/integration/test_views_bookings.py -v</span>
+                <button class="copy-btn" onclick="copyCmd(this)">Copier</button>
+            </div>
+            <table class="test-table">
+                <thead><tr><th>Test</th><th>Description</th><th>Statut</th></tr></thead>
+                <tbody>
+                    <tr><td><span class="test-name">test_my_bookings_requires_login</span></td><td class="test-desc">Mes r&eacute;servations sans auth redirige vers connexion.</td><td><span class="status-badge status-pass">&#10003; OK</span></td></tr>
+                    <tr><td><span class="test-name">test_my_bookings_authenticated</span></td><td class="test-desc">Mes r&eacute;servations avec auth affiche les r&eacute;servations.</td><td><span class="status-badge status-pass">&#10003; OK</span></td></tr>
+                    <tr><td><span class="test-name">test_booking_lookup_page</span></td><td class="test-desc">GET page de recherche par r&eacute;f&eacute;rence retourne 200.</td><td><span class="status-badge status-pass">&#10003; OK</span></td></tr>
+                    <tr><td><span class="test-name">test_select_flight_redirect</span></td><td class="test-desc">POST <code>/selectionner-vol/&lt;id&gt;/</code> redirige vers cr&eacute;ation.</td><td><span class="status-badge status-pass">&#10003; OK</span></td></tr>
+                    <tr><td><span class="test-name">test_booking_creation</span></td><td class="test-desc">POST avec donn&eacute;es valides cr&eacute;e une r&eacute;servation.</td><td><span class="status-badge status-pass">&#10003; OK</span></td></tr>
+                    <tr><td><span class="test-name">test_booking_cancellation</span></td><td class="test-desc">POST annulation change le statut en <code>cancelled</code>.</td><td><span class="status-badge status-pass">&#10003; OK</span></td></tr>
+                    <tr><td><span class="test-name">test_booking_reference_lookup</span></td><td class="test-desc">POST recherche avec r&eacute;f&eacute;rence + email valides redirige vers d&eacute;tail.</td><td><span class="status-badge status-pass">&#10003; OK</span></td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="file-card">
+        <div class="file-card-header">
+            <span class="file-path">tests/integration/test_views_destinations.py</span>
+            <span class="test-count">5 tests</span>
+        </div>
+        <div class="file-card-body">
+            <div class="cmd-block">
+                <span class="prompt">$</span>
+                <span class="cmd">python -m pytest tests/integration/test_views_destinations.py -v</span>
+                <button class="copy-btn" onclick="copyCmd(this)">Copier</button>
+            </div>
+            <table class="test-table">
+                <thead><tr><th>Test</th><th>Description</th><th>Statut</th></tr></thead>
+                <tbody>
+                    <tr><td><span class="test-name">test_destination_list</span></td><td class="test-desc">GET liste des destinations retourne 200 avec contexte <code>destinations</code>.</td><td><span class="status-badge status-pass">&#10003; OK</span></td></tr>
+                    <tr><td><span class="test-name">test_destination_detail</span></td><td class="test-desc">GET d&eacute;tail avec slug valide retourne 200.</td><td><span class="status-badge status-pass">&#10003; OK</span></td></tr>
+                    <tr><td><span class="test-name">test_destination_detail_404</span></td><td class="test-desc">Slug invalide retourne 404.</td><td><span class="status-badge status-pass">&#10003; OK</span></td></tr>
+                    <tr><td><span class="test-name">test_destination_featured</span></td><td class="test-desc">Les destinations vedettes (<code>is_featured=True</code>) apparaissent dans le contexte.</td><td><span class="status-badge status-pass">&#10003; OK</span></td></tr>
+                    <tr><td><span class="test-name">test_destination_review_form</span></td><td class="test-desc">Utilisateur authentifi&eacute; peut voir le formulaire d'avis.</td><td><span class="status-badge status-pass">&#10003; OK</span></td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="file-card">
+        <div class="file-card-header">
+            <span class="file-path">tests/integration/test_views_promotions.py</span>
+            <span class="test-count">5 tests</span>
+        </div>
+        <div class="file-card-body">
+            <div class="cmd-block">
+                <span class="prompt">$</span>
+                <span class="cmd">python -m pytest tests/integration/test_views_promotions.py -v</span>
+                <button class="copy-btn" onclick="copyCmd(this)">Copier</button>
+            </div>
+            <table class="test-table">
+                <thead><tr><th>Test</th><th>Description</th><th>Statut</th></tr></thead>
+                <tbody>
+                    <tr><td><span class="test-name">test_promotion_list</span></td><td class="test-desc">GET liste promotions retourne 200 avec contexte <code>promotions</code>.</td><td><span class="status-badge status-pass">&#10003; OK</span></td></tr>
+                    <tr><td><span class="test-name">test_promotion_detail</span></td><td class="test-desc">GET d&eacute;tail avec code promo valide retourne 200.</td><td><span class="status-badge status-pass">&#10003; OK</span></td></tr>
+                    <tr><td><span class="test-name">test_promotion_detail_404</span></td><td class="test-desc">Code invalide retourne 404.</td><td><span class="status-badge status-pass">&#10003; OK</span></td></tr>
+                    <tr><td><span class="test-name">test_newsletter_subscribe_success</span></td><td class="test-desc">POST email valide vers newsletter retourne succ&egrave;s JSON.</td><td><span class="status-badge status-pass">&#10003; OK</span></td></tr>
+                    <tr><td><span class="test-name">test_newsletter_subscribe_duplicate</span></td><td class="test-desc">Email d&eacute;j&agrave; inscrit retourne erreur JSON.</td><td><span class="status-badge status-pass">&#10003; OK</span></td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════════════ -->
+<!-- JOUR 5 — Tests API (Sprint 1, Jour 5)                                  -->
+<!-- ═══════════════════════════════════════════════════════════════════════════ -->
+<section class="day-section day-5" id="jour-5">
+    <div class="day-header">
+        <div class="day-number">5</div>
+        <div class="day-info">
+            <h2>Tests API &mdash; Auth, Autocomplete, Booking, Newsletter</h2>
+            <div class="day-desc">Tests des endpoints API REST : authentification, autocompl&eacute;tion a&eacute;roports, cr&eacute;ation/annulation de r&eacute;servation, newsletter</div>
+        </div>
+        <div class="day-tags">
+            <span class="tag tag-api">API</span>
+            <span style="font-size:0.72rem;color:var(--text-muted);">Sprint 1</span>
+        </div>
+    </div>
+
+    <div class="file-card">
+        <div class="file-card-header">
+            <span class="file-path">tests/api/test_auth_api.py</span>
+            <span class="test-count">8 tests</span>
+        </div>
+        <div class="file-card-body">
+            <div class="cmd-block">
+                <span class="prompt">$</span>
+                <span class="cmd">python -m pytest tests/api/test_auth_api.py -v</span>
+                <button class="copy-btn" onclick="copyCmd(this)">Copier</button>
+            </div>
+            <table class="test-table">
+                <thead><tr><th>Test</th><th>Description</th><th>Statut</th></tr></thead>
+                <tbody>
+                    <tr><td><span class="test-class">TestAuthLoginAPI</span><br><span class="test-name">test_login_api_valid</span></td><td class="test-desc">POST connexion avec identifiants valides &rarr; 302 redirect.</td><td><span class="status-badge status-pass">&#10003; OK</span></td></tr>
+                    <tr><td><span class="test-name">test_login_api_invalid</span></td><td class="test-desc">POST avec mauvais mot de passe &rarr; 200 avec erreur.</td><td><span class="status-badge status-pass">&#10003; OK</span></td></tr>
+                    <tr><td><span class="test-name">test_login_api_csrf</span></td><td class="test-desc">POST sans token CSRF &rarr; 403 Forbidden.</td><td><span class="status-badge status-pass">&#10003; OK</span></td></tr>
+                    <tr><td><span class="test-class">TestAuthRegisterAPI</span><br><span class="test-name">test_register_api_valid</span></td><td class="test-desc">POST inscription avec donn&eacute;es valides &rarr; nouvel utilisateur + redirect.</td><td><span class="status-badge status-pass">&#10003; OK</span></td></tr>
+                    <tr><td><span class="test-name">test_register_api_duplicate_email</span></td><td class="test-desc">Email d&eacute;j&agrave; utilis&eacute; &rarr; erreur.</td><td><span class="status-badge status-pass">&#10003; OK</span></td></tr>
+                    <tr><td><span class="test-class">TestAuthLogoutAPI</span><br><span class="test-name">test_logout_api</span></td><td class="test-desc">GET d&eacute;connexion &rarr; d&eacute;connecte et redirige.</td><td><span class="status-badge status-pass">&#10003; OK</span></td></tr>
+                    <tr><td><span class="test-class">TestProtectedPagesAPI</span><br><span class="test-name">test_protected_api_redirect</span></td><td class="test-desc">GET page prot&eacute;g&eacute;e sans auth &rarr; 302 vers login.</td><td><span class="status-badge status-pass">&#10003; OK</span></td></tr>
+                    <tr><td><span class="test-name">test_session_persistence</span></td><td class="test-desc">Login &rarr; page prot&eacute;g&eacute;e &rarr; succ&egrave;s (session persistante).</td><td><span class="status-badge status-pass">&#10003; OK</span></td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="file-card">
+        <div class="file-card-header">
+            <span class="file-path">tests/api/test_autocomplete_api.py</span>
+            <span class="test-count">10 tests</span>
+        </div>
+        <div class="file-card-body">
+            <div class="cmd-block">
+                <span class="prompt">$</span>
+                <span class="cmd">python -m pytest tests/api/test_autocomplete_api.py -v</span>
+                <button class="copy-btn" onclick="copyCmd(this)">Copier</button>
+            </div>
+            <table class="test-table">
+                <thead><tr><th>Test</th><th>Description</th><th>Statut</th></tr></thead>
+                <tbody>
+                    <tr><td><span class="test-name">test_autocomplete_valid_query</span></td><td class="test-desc">GET <code>q='TUN'</code> &rarr; 200, JSON avec au moins 1 r&eacute;sultat.</td><td><span class="status-badge status-pass">&#10003; OK</span></td></tr>
+                    <tr><td><span class="test-name">test_autocomplete_multiple_results</span></td><td class="test-desc"><code>q='TU'</code> &rarr; plusieurs a&eacute;roports.</td><td><span class="status-badge status-pass">&#10003; OK</span></td></tr>
+                    <tr><td><span class="test-name">test_autocomplete_single_char</span></td><td class="test-desc"><code>q='T'</code> &rarr; r&eacute;sultats possibles ou liste vide.</td><td><span class="status-badge status-pass">&#10003; OK</span></td></tr>
+                    <tr><td><span class="test-name">test_autocomplete_empty_query</span></td><td class="test-desc"><code>q=''</code> &rarr; liste vide.</td><td><span class="status-badge status-pass">&#10003; OK</span></td></tr>
+                    <tr><td><span class="test-name">test_autocomplete_no_results</span></td><td class="test-desc"><code>q='XYZ'</code> &rarr; liste vide.</td><td><span class="status-badge status-pass">&#10003; OK</span></td></tr>
+                    <tr><td><span class="test-name">test_autocomplete_response_structure</span></td><td class="test-desc">Chaque a&eacute;roport a les cl&eacute;s: id, code, name, city, country.</td><td><span class="status-badge status-pass">&#10003; OK</span></td></tr>
+                    <tr><td><span class="test-name">test_autocomplete_code_format</span></td><td class="test-desc">Le code est exactement 3 lettres majuscules.</td><td><span class="status-badge status-pass">&#10003; OK</span></td></tr>
+                    <tr><td><span class="test-name">test_autocomplete_active_airports_only</span></td><td class="test-desc">Seuls les a&eacute;roports actifs sont retourn&eacute;s.</td><td><span class="status-badge status-pass">&#10003; OK</span></td></tr>
+                    <tr><td><span class="test-name">test_autocomplete_ordered_by_city</span></td><td class="test-desc">R&eacute;sultats tri&eacute;s alphab&eacute;tiquement par ville.</td><td><span class="status-badge status-pass">&#10003; OK</span></td></tr>
+                    <tr><td><span class="test-name">test_autocomplete_response_time</span></td><td class="test-desc">L'endpoint r&eacute;pond en moins de 500ms.</td><td><span class="status-badge status-pass">&#10003; OK</span></td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="file-card">
+        <div class="file-card-header">
+            <span class="file-path">tests/api/test_booking_api.py</span>
+            <span class="test-count">8 tests</span>
+        </div>
+        <div class="file-card-body">
+            <div class="cmd-block">
+                <span class="prompt">$</span>
+                <span class="cmd">python -m pytest tests/api/test_booking_api.py -v</span>
+                <button class="copy-btn" onclick="copyCmd(this)">Copier</button>
+            </div>
+            <table class="test-table">
+                <thead><tr><th>Test</th><th>Description</th><th>Statut</th></tr></thead>
+                <tbody>
+                    <tr><td><span class="test-name">test_booking_lookup_get</span></td><td class="test-desc">GET page de recherche retourne 200.</td><td><span class="status-badge status-pass">&#10003; OK</span></td></tr>
+                    <tr><td><span class="test-name">test_booking_lookup_valid_reference</span></td><td class="test-desc">POST avec r&eacute;f&eacute;rence + email valides &rarr; redirect vers d&eacute;tails.</td><td><span class="status-badge status-pass">&#10003; OK</span></td></tr>
+                    <tr><td><span class="test-name">test_booking_lookup_invalid_reference</span></td><td class="test-desc">R&eacute;f&eacute;rence inexistante &rarr; message d'erreur.</td><td><span class="status-badge status-pass">&#10003; OK</span></td></tr>
+                    <tr><td><span class="test-name">test_booking_lookup_missing_fields</span></td><td class="test-desc">POST sans champs requis &rarr; erreur.</td><td><span class="status-badge status-pass">&#10003; OK</span></td></tr>
+                    <tr><td><span class="test-name">test_booking_create_authenticated</span></td><td class="test-desc">POST connect&eacute; &rarr; redirect vers confirmation.</td><td><span class="status-badge status-pass">&#10003; OK</span></td></tr>
+                    <tr><td><span class="test-name">test_booking_create_unauthenticated</span></td><td class="test-desc">POST sans auth &rarr; la vue est accessible (pas de LoginRequiredMixin).</td><td><span class="status-badge status-pass">&#10003; OK</span></td></tr>
+                    <tr><td><span class="test-name">test_booking_cancel_valid</span></td><td class="test-desc">POST annulation d'une r&eacute;servation confirmed &rarr; statut cancelled.</td><td><span class="status-badge status-pass">&#10003; OK</span></td></tr>
+                    <tr><td><span class="test-name">test_booking_cancel_already_cancelled</span></td><td class="test-desc">Annulation d&eacute;j&agrave; annul&eacute;e &rarr; message d'erreur.</td><td><span class="status-badge status-pass">&#10003; OK</span></td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="file-card">
+        <div class="file-card-header">
+            <span class="file-path">tests/api/test_newsletter_api.py</span>
+            <span class="test-count">5 tests</span>
+        </div>
+        <div class="file-card-body">
+            <div class="cmd-block">
+                <span class="prompt">$</span>
+                <span class="cmd">python -m pytest tests/api/test_newsletter_api.py -v</span>
+                <button class="copy-btn" onclick="copyCmd(this)">Copier</button>
+            </div>
+            <table class="test-table">
+                <thead><tr><th>Test</th><th>Description</th><th>Statut</th></tr></thead>
+                <tbody>
+                    <tr><td><span class="test-name">test_newsletter_subscribe_valid</span></td><td class="test-desc">POST email valide &rarr; JSON <code>{success: true}</code>.</td><td><span class="status-badge status-pass">&#10003; OK</span></td></tr>
+                    <tr><td><span class="test-name">test_newsletter_subscribe_duplicate</span></td><td class="test-desc">Email d&eacute;j&agrave; inscrit &rarr; JSON <code>{success: false}</code>.</td><td><span class="status-badge status-pass">&#10003; OK</span></td></tr>
+                    <tr><td><span class="test-name">test_newsletter_subscribe_invalid_email</span></td><td class="test-desc">Email mal format&eacute; &rarr; la vue tente get_or_create.</td><td><span class="status-badge status-pass">&#10003; OK</span></td></tr>
+                    <tr><td><span class="test-name">test_newsletter_subscribe_missing_email</span></td><td class="test-desc">Sans champ email &rarr; JSON <code>{success: false}</code>.</td><td><span class="status-badge status-pass">&#10003; OK</span></td></tr>
+                    <tr><td><span class="test-name">test_newsletter_subscribe_response_format</span></td><td class="test-desc">La r&eacute;ponse JSON contient <code>success</code> + <code>message|error</code>.</td><td><span class="status-badge status-pass">&#10003; OK</span></td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════════════ -->
+<!-- JOUR 6 — Utilitaires                                                    -->
+<!-- ═══════════════════════════════════════════════════════════════════════════ -->
+<section class="day-section day-6" id="jour-6">
+    <div class="day-header">
+        <div class="day-number">6</div>
+        <div class="day-info">
+            <h2>Utilitaires &mdash; Filtres de template, prix, validation</h2>
+            <div class="day-desc">Tests des fonctions utilitaires : formatage dur&eacute;e, calcul de prix, validation de passager</div>
+        </div>
+        <div class="day-tags">
+            <span class="tag tag-unit">Unit</span>
+        </div>
+    </div>
+
+    <div class="file-card">
+        <div class="file-card-header">
+            <span class="file-path">tests/unit/test_models_utils.py</span>
+            <span class="test-count">5 tests</span>
+        </div>
+        <div class="file-card-body">
+            <div class="cmd-block">
+                <span class="prompt">$</span>
+                <span class="cmd">python -m pytest tests/unit/test_models_utils.py -v</span>
+                <button class="copy-btn" onclick="copyCmd(this)">Copier</button>
+            </div>
+            <table class="test-table">
+                <thead><tr><th>Test</th><th>Description</th><th>Statut</th></tr></thead>
+                <tbody>
+                    <tr><td><span class="test-name">test_duration_format_filter</span></td><td class="test-desc">Formatage de la dur&eacute;e en <code>Xh Ym</code>.</td><td><span class="status-badge status-pass">&#10003; OK</span></td></tr>
+                    <tr><td><span class="test-name">test_duration_format_exact_hours</span></td><td class="test-desc">Dur&eacute;e en heures exactes (pas de minutes).</td><td><span class="status-badge status-pass">&#10003; OK</span></td></tr>
+                    <tr><td><span class="test-name">test_flight_price_calculation_with_discount</span></td><td class="test-desc">Calcul de prix avec promotion appliqu&eacute;e.</td><td><span class="status-badge status-pass">&#10003; OK</span></td></tr>
+                    <tr><td><span class="test-name">test_booking_reference_format</span></td><td class="test-desc">La r&eacute;f&eacute;rence est un UUID valide.</td><td><span class="status-badge status-pass">&#10003; OK</span></td></tr>
+                    <tr><td><span class="test-name">test_passenger_age_validation</span></td><td class="test-desc">&Acirc;ge calcul&eacute; &agrave; partir de la date de naissance.</td><td><span class="status-badge status-pass">&#10003; OK</span></td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════════════ -->
+<!-- JOUR 7 — S&eacute;curit&eacute; : CSRF + Auth                                   -->
+<!-- ═══════════════════════════════════════════════════════════════════════════ -->
+<section class="day-section day-7" id="jour-7">
+    <div class="day-header">
+        <div class="day-number">7</div>
+        <div class="day-info">
+            <h2>S&eacute;curit&eacute; &mdash; CSRF et Authentification</h2>
+            <div class="day-desc">Tests de protection CSRF et contr&ocirc;le d'acc&egrave;s authentifi&eacute;</div>
+        </div>
+        <div class="day-tags">
+            <span class="tag tag-security">S&eacute;curit&eacute;</span>
+        </div>
+    </div>
+
+    <div class="file-card">
+        <div class="file-card-header">
+            <span class="file-path">tests/security/test_csrf.py</span>
+            <span class="test-count">5 tests</span>
+        </div>
+        <div class="file-card-body">
+            <div class="cmd-block">
+                <span class="prompt">$</span>
+                <span class="cmd">python -m pytest tests/security/test_csrf.py -v</span>
+                <button class="copy-btn" onclick="copyCmd(this)">Copier</button>
+            </div>
+            <table class="test-table">
+                <thead><tr><th>Test</th><th>Description</th><th>Statut</th></tr></thead>
+                <tbody>
+                    <tr><td><span class="test-name">test_csrf_token_in_login_form</span></td><td class="test-desc">Le formulaire de login contient un token CSRF.</td><td><span class="status-badge status-pass">&#10003; OK</span></td></tr>
+                    <tr><td><span class="test-name">test_csrf_token_in_register_form</span></td><td class="test-desc">Le formulaire d'inscription contient un token CSRF.</td><td><span class="status-badge status-pass">&#10003; OK</span></td></tr>
+                    <tr><td><span class="test-name">test_csrf_token_in_booking_form</span></td><td class="test-desc">Le formulaire de r&eacute;servation contient un token CSRF.</td><td><span class="status-badge status-pass">&#10003; OK</span></td></tr>
+                    <tr><td><span class="test-name">test_csrf_protected_post_rejected</span></td><td class="test-desc">POST sans token CSRF est rejet&eacute; (403).</td><td><span class="status-badge status-pass">&#10003; OK</span></td></tr>
+                    <tr><td><span class="test-name">test_csrf_token_rotated_on_login</span></td><td class="test-desc">Le token CSRF est r&eacute;g&eacute;n&eacute;r&eacute; apr&egrave;s connexion.</td><td><span class="status-badge status-pass">&#10003; OK</span></td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="file-card">
+        <div class="file-card-header">
+            <span class="file-path">tests/security/test_auth_security.py</span>
+            <span class="test-count">5 tests (1 xfail)</span>
+        </div>
+        <div class="file-card-body">
+            <div class="cmd-block">
+                <span class="prompt">$</span>
+                <span class="cmd">python -m pytest tests/security/test_auth_security.py -v</span>
+                <button class="copy-btn" onclick="copyCmd(this)">Copier</button>
+            </div>
+            <table class="test-table">
+                <thead><tr><th>Test</th><th>Description</th><th>Statut</th></tr></thead>
+                <tbody>
+                    <tr><td><span class="test-name">test_protected_url_redirect_without_auth</span></td><td class="test-desc">URL prot&eacute;g&eacute;e sans auth &rarr; redirect vers login.</td><td><span class="status-badge status-pass">&#10003; OK</span></td></tr>
+                    <tr><td><span class="test-name">test_protected_api_without_auth</span></td><td class="test-desc">API prot&eacute;g&eacute;e sans auth &rarr; 401/403 ou redirect.</td><td><span class="status-badge status-pass">&#10003; OK</span></td></tr>
+                    <tr><td><span class="test-name">test_sql_injection_via_search</span></td><td class="test-desc">Injection SQL via recherche &rarr; pas d'erreur 500, pas de fuite.</td><td><span class="status-badge status-pass">&#10003; OK</span></td></tr>
+                    <tr><td><span class="test-name">test_xss_via_search</span></td><td class="test-desc">XSS via recherche &rarr; sorties &eacute;chapp&eacute;es.</td><td><span class="status-badge status-pass">&#10003; OK</span></td></tr>
+                    <tr><td><span class="test-name">test_brute_force_login</span></td><td class="test-desc">5 tentatives &eacute;chou&eacute;es &rarr; compte bloqu&eacute; ou limit&eacute;.</td><td><span class="status-badge status-xfail">&#10007; XFAIL</span></td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════════════ -->
+<!-- JOUR 8 — OWASP Top 10 + S&eacute;curit&eacute; avanc&eacute;e (Sprint 1, Jour 8)  -->
+<!-- ═══════════════════════════════════════════════════════════════════════════ -->
+<section class="day-section day-8" id="jour-8">
+    <div class="day-header">
+        <div class="day-number">8</div>
+        <div class="day-info">
+            <h2>OWASP Top 10 &mdash; Tests de S&eacute;curit&eacute; Avanc&eacute;s</h2>
+            <div class="day-desc">Tests bas&eacute;s sur les vuln&eacute;rabilit&eacute;s OWASP Top 10 (2021) : acc&egrave;s, cryptographie, injection, XSS, configuration</div>
+        </div>
+        <div class="day-tags">
+            <span class="tag tag-security">OWASP</span>
+            <span style="font-size:0.72rem;color:var(--text-muted);">Sprint 1</span>
+        </div>
+    </div>
+
+    <div class="file-card">
+        <div class="file-card-header">
+            <span class="file-path">tests/security/test_owasp_top10.py</span>
+            <span class="test-count">16 tests (2 skip)</span>
+        </div>
+        <div class="file-card-body">
+            <div class="cmd-block">
+                <span class="prompt">$</span>
+                <span class="cmd">python -m pytest tests/security/test_owasp_top10.py -v</span>
+                <button class="copy-btn" onclick="copyCmd(this)">Copier</button>
+            </div>
+            <table class="test-table">
+                <thead><tr><th>Test</th><th>Description</th><th>Statut</th></tr></thead>
+                <tbody>
+                    <tr><td colspan="3" style="padding:8px 20px 4px;"><strong style="color:var(--tag-security);">A01 &mdash; Broken Access Control (3 tests)</strong></td></tr>
+                    <tr><td><span class="test-name">test_a01_...admin_without_permission</span></td><td class="test-desc">Non-admin ne peut pas acc&eacute;der &agrave; /admin/.</td><td><span class="status-badge status-pass">&#10003; OK</span></td></tr>
+                    <tr><td><span class="test-name">test_a01_...admin_pages</span></td><td class="test-desc">Sous-pages /admin/* prot&eacute;g&eacute;es.</td><td><span class="status-badge status-pass">&#10003; OK</span></td></tr>
+                    <tr><td><span class="test-name">test_a01_...other_user_profile</span></td><td class="test-desc">Impossible de modifier le profil d'un autre utilisateur.</td><td><span class="status-badge status-pass">&#10003; OK</span></td></tr>
+
+                    <tr><td colspan="3" style="padding:8px 20px 4px;"><strong style="color:var(--tag-security);">A02 &mdash; Cryptographic Failures (2 tests)</strong></td></tr>
+                    <tr><td><span class="test-name">test_a02_...password_hashing</span></td><td class="test-desc">Mots de passe hach&eacute;s (PBKDF2/Argon2/bcrypt), pas en clair.</td><td><span class="status-badge status-pass">&#10003; OK</span></td></tr>
+                    <tr><td><span class="test-name">test_a02_...secret_key</span></td><td class="test-desc">Cl&eacute; secr&egrave;te &ge; 30 caract&egrave;res.</td><td><span class="status-badge status-skip">&#9888; SKIP</span></td></tr>
+
+                    <tr><td colspan="3" style="padding:8px 20px 4px;"><strong style="color:var(--tag-security);">A03 &mdash; Injection (2 tests)</strong></td></tr>
+                    <tr><td><span class="test-name">test_a03_...sql_via_autocomplete</span></td><td class="test-desc">10 payloads SQL injection via autocomplete.</td><td><span class="status-badge status-pass">&#10003; OK</span></td></tr>
+                    <tr><td><span class="test-name">test_a03_...xss_via_autocomplete</span></td><td class="test-desc">7 payloads XSS &eacute;chapp&eacute;s dans JSON.</td><td><span class="status-badge status-pass">&#10003; OK</span></td></tr>
+
+                    <tr><td colspan="3" style="padding:8px 20px 4px;"><strong style="color:var(--tag-security);">A04 &mdash; Insecure Design (2 tests)</strong></td></tr>
+                    <tr><td><span class="test-name">test_a04_...no_sensitive_data_in_errors</span></td><td class="test-desc">Pages 404/500 ne r&eacute;v&egrave;lent pas d'infos sensibles.</td><td><span class="status-badge status-pass">&#10003; OK</span></td></tr>
+                    <tr><td><span class="test-name">test_a04_...no_enumeration</span></td><td class="test-desc">&Eacute;num&eacute;ration d'utilisateurs impossible via login.</td><td><span class="status-badge status-pass">&#10003; OK</span></td></tr>
+
+                    <tr><td colspan="3" style="padding:8px 20px 4px;"><strong style="color:var(--tag-security);">A05 &mdash; Security Misconfiguration (4 tests, 1 skip)</strong></td></tr>
+                    <tr><td><span class="test-name">test_a05_...debug_mode</span></td><td class="test-desc">DEBUG est conscient de son &eacute;tat.</td><td><span class="status-badge status-pass">&#10003; OK</span></td></tr>
+                    <tr><td><span class="test-name">test_a05_...allowed_hosts</span></td><td class="test-desc">ALLOWED_HOSTS configur&eacute;.</td><td><span class="status-badge status-skip">&#9888; SKIP</span></td></tr>
+                    <tr><td><span class="test-name">test_a05_...security_headers</span></td><td class="test-desc">Headers X-Frame-Options et X-Content-Type-Options pr&eacute;sents.</td><td><span class="status-badge status-pass">&#10003; OK</span></td></tr>
+                    <tr><td><span class="test-name">test_a05_...no_debug_toolbar</span></td><td class="test-desc">Debug Toolbar inaccessible en production.</td><td><span class="status-badge status-pass">&#10003; OK</span></td></tr>
+
+                    <tr><td colspan="3" style="padding:8px 20px 4px;"><strong style="color:var(--tag-security);">A07 &mdash; XSS (3 tests)</strong></td></tr>
+                    <tr><td><span class="test-name">test_a07_...in_search_parameters</span></td><td class="test-desc">6 payloads XSS dans param&egrave;tres de recherche.</td><td><span class="status-badge status-pass">&#10003; OK</span></td></tr>
+                    <tr><td><span class="test-name">test_a07_...in_form_fields</span></td><td class="test-desc">Formulaires &eacute;chappent les caract&egrave;res sp&eacute;ciaux.</td><td><span class="status-badge status-pass">&#10003; OK</span></td></tr>
+                    <tr><td><span class="test-name">test_a07_...json_response</span></td><td class="test-desc">R&eacute;ponses JSON sans payloads XSS.</td><td><span class="status-badge status-pass">&#10003; OK</span></td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="file-card">
+        <div class="file-card-header">
+            <span class="file-path">tests/security/test_security_manual.py</span>
+            <span class="test-count">15 tests</span>
+        </div>
+        <div class="file-card-body">
+            <div class="cmd-block">
+                <span class="prompt">$</span>
+                <span class="cmd">python -m pytest tests/security/test_security_manual.py -v</span>
+                <button class="copy-btn" onclick="copyCmd(this)">Copier</button>
+            </div>
+            <table class="test-table">
+                <thead><tr><th>Test</th><th>Description</th><th>Statut</th></tr></thead>
+                <tbody>
+                    <tr><td colspan="3" style="padding:8px 20px 4px;"><strong style="color:var(--tag-security);">CSRF Protection (2 tests)</strong></td></tr>
+                    <tr><td><span class="test-name">test_csrf_home_page</span></td><td class="test-desc">Page d'accueil contient un token CSRF.</td><td><span class="status-badge status-pass">&#10003; OK</span></td></tr>
+                    <tr><td><span class="test-name">test_csrf_protected_post</span></td><td class="test-desc">POST sans CSRF &rarr; 403 (avec enforce_csrf_checks).</td><td><span class="status-badge status-pass">&#10003; OK</span></td></tr>
+                    <tr><td colspan="3" style="padding:8px 20px 4px;"><strong style="color:var(--tag-security);">XSS Protection (2 tests)</strong></td></tr>
+                    <tr><td><span class="test-name">test_xss_in_search</span></td><td class="test-desc">Recherche avec payload XSS ne r&eacute;fl&egrave;che pas le script.</td><td><span class="status-badge status-pass">&#10003; OK</span></td></tr>
+                    <tr><td><span class="test-name">test_xss_in_html_response</span></td><td class="test-desc">Formulaires &eacute;chappent les caract&egrave;res sp&eacute;ciaux.</td><td><span class="status-badge status-pass">&#10003; OK</span></td></tr>
+                    <tr><td colspan="3" style="padding:8px 20px 4px;"><strong style="color:var(--tag-security);">SQL Injection Protection (2 tests)</strong></td></tr>
+                    <tr><td><span class="test-name">test_sql_injection_search</span></td><td class="test-desc">Payload SQL injection &rarr; r&eacute;ponse s&ucirc;re.</td><td><span class="status-badge status-pass">&#10003; OK</span></td></tr>
+                    <tr><td><span class="test-name">test_sql_injection_union</span></td><td class="test-desc">Payload UNION SELECT.</td><td><span class="status-badge status-pass">&#10003; OK</span></td></tr>
+                    <tr><td colspan="3" style="padding:8px 20px 4px;"><strong style="color:var(--tag-security);">Access Control (3 tests)</strong></td></tr>
+                    <tr><td><span class="test-name">test_protected_view_redirect</span></td><td class="test-desc">Profil redirige si non authentifi&eacute;.</td><td><span class="status-badge status-pass">&#10003; OK</span></td></tr>
+                    <tr><td><span class="test-name">test_protected_my_bookings_redirect</span></td><td class="test-desc">Mes r&eacute;servations redirige si non authentifi&eacute;.</td><td><span class="status-badge status-pass">&#10003; OK</span></td></tr>
+                    <tr><td><span class="test-name">test_authenticated_access_my_bookings</span></td><td class="test-desc">Acc&egrave;s authentifi&eacute; &agrave; mes r&eacute;servations &rarr; 200.</td><td><span class="status-badge status-pass">&#10003; OK</span></td></tr>
+                    <tr><td colspan="3" style="padding:8px 20px 4px;"><strong style="color:var(--tag-security);">Session + Configuration (6 tests)</strong></td></tr>
+                    <tr><td><span class="test-name">test_session_expiry</span></td><td class="test-desc">Session expir&eacute;e redirige vers login.</td><td><span class="status-badge status-pass">&#10003; OK</span></td></tr>
+                    <tr><td><span class="test-name">test_session_not_in_url</span></td><td class="test-desc">ID de session pas expos&eacute; dans les URLs.</td><td><span class="status-badge status-pass">&#10003; OK</span></td></tr>
+                    <tr><td><span class="test-name">test_debug_mode_off</span></td><td class="test-desc">DEBUG=False en production.</td><td><span class="status-badge status-pass">&#10003; OK</span></td></tr>
+                    <tr><td><span class="test-name">test_https_enforcement</span></td><td class="test-desc">Configuration HTTPS v&eacute;rifi&eacute;e.</td><td><span class="status-badge status-pass">&#10003; OK</span></td></tr>
+                    <tr><td><span class="test-name">test_password_not_in_response</span></td><td class="test-desc">Mot de passe jamais dans les r&eacute;ponses HTML.</td><td><span class="status-badge status-pass">&#10003; OK</span></td></tr>
+                    <tr><td><span class="test-name">test_login_rate_limiting</span></td><td class="test-desc">Tentatives &eacute;chou&eacute;es g&eacute;r&eacute;es.</td><td><span class="status-badge status-pass">&#10003; OK</span></td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════════════ -->
+<!-- JOUR 9 — Tests de r&eacute;gression                                      -->
+<!-- ═══════════════════════════════════════════════════════════════════════════ -->
+<section class="day-section day-9" id="jour-9">
+    <div class="day-header">
+        <div class="day-number">9</div>
+        <div class="day-info">
+            <h2>Tests de R&eacute;gression &mdash; Sc&eacute;narios complets</h2>
+            <div class="day-desc">Sc&eacute;narios end-to-end validant les parcours utilisateur complets : recherche, r&eacute;servation, paiement, authentification</div>
+        </div>
+        <div class="day-tags">
+            <span class="tag tag-regression">R&eacute;gression</span>
+            <span class="tag tag-smoke">Smoke</span>
+        </div>
+    </div>
+
+    <div class="file-card">
+        <div class="file-card-header">
+            <span class="file-path">tests/test_regression.py</span>
+            <span class="test-count">62 tests</span>
+        </div>
+        <div class="file-card-body">
+            <div class="cmd-block">
+                <span class="prompt">$</span>
+                <span class="cmd">python -m pytest tests/test_regression.py -v</span>
+                <button class="copy-btn" onclick="copyCmd(this)">Copier</button>
+            </div>
+            <table class="test-table">
+                <thead><tr><th>Classe de tests</th><th>Description</th><th>Statut</th></tr></thead>
+                <tbody>
+                    <tr>
+                        <td><span class="test-class">TestModelCreationRegression</span><br><em>~8 tests</em></td>
+                        <td class="test-desc">R&eacute;gression de cr&eacute;ation de mod&egrave;les : a&eacute;roport, a&eacute;ronef, vol, r&eacute;servation, paiement, profil utilisateur, promotion.</td>
+                        <td><span class="status-badge status-pass">&#10003; OK</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="test-class">TestModelUpdateRegression</span><br><em>~8 tests</em></td>
+                        <td class="test-desc">R&eacute;gression de mise &agrave; jour : modification de vol, annulation de r&eacute;servation, mise &agrave; jour du profil.</td>
+                        <td><span class="status-badge status-pass">&#10003; OK</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="test-class">TestModelDeleteRegression</span><br><em>~6 tests</em></td>
+                        <td class="test-desc">R&eacute;gression de suppression : suppression de vol, cascade sur passagers, protection des a&eacute;roports.</td>
+                        <td><span class="status-badge status-pass">&#10003; OK</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="test-class">TestAuthenticationRegression</span><br><em>~6 tests</em></td>
+                        <td class="test-desc">R&eacute;gression auth : inscription, connexion, d&eacute;connexion, page profil, acc&egrave;s prot&eacute;g&eacute;.</td>
+                        <td><span class="status-badge status-pass">&#10003; OK</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="test-class">TestFlightSearchRegression</span><br><em>~6 tests</em></td>
+                        <td class="test-desc">R&eacute;gression recherche : vols disponibles, filtre par classe, dates futures, r&eacute;sultats vides.</td>
+                        <td><span class="status-badge status-pass">&#10003; OK</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="test-class">TestBookingFlowRegression</span><br><em>~8 tests</em></td>
+                        <td class="test-desc">R&eacute;gression flux r&eacute;servation : cr&eacute;ation, d&eacute;tail, annulation, listing, r&eacute;f&eacute;rence.</td>
+                        <td><span class="status-badge status-pass">&#10003; OK</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="test-class">TestPromotionRegression</span><br><em>~6 tests</em></td>
+                        <td class="test-desc">R&eacute;gression promotions : cr&eacute;ation, validit&eacute;, application sur prix, expiration.</td>
+                        <td><span class="status-badge status-pass">&#10003; OK</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="test-class">TestAPIRegression</span><br><em>~14 tests</em></td>
+                        <td class="test-desc">R&eacute;gression API : autocomplete, login, logout, cr&eacute;ation r&eacute;servation, newsletter, erreurs.</td>
+                        <td><span class="status-badge status-pass">&#10003; OK</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="file-card">
+        <div class="file-card-header">
+            <span class="file-path">tests/test_smoke.py</span>
+            <span class="test-count">3 tests</span>
+        </div>
+        <div class="file-card-body">
+            <div class="cmd-block">
+                <span class="prompt">$</span>
+                <span class="cmd">python -m pytest tests/test_smoke.py -v</span>
+                <button class="copy-btn" onclick="copyCmd(this)">Copier</button>
+            </div>
+            <table class="test-table">
+                <thead><tr><th>Test</th><th>Description</th><th>Statut</th></tr></thead>
+                <tbody>
+                    <tr><td><span class="test-name">test_homepage_loads</span></td><td class="test-desc">La page d'accueil se charge sans erreur (200).</td><td><span class="status-badge status-pass">&#10003; OK</span></td></tr>
+                    <tr><td><span class="test-name">test_login_page_loads</span></td><td class="test-desc">La page de connexion se charge (200).</td><td><span class="status-badge status-pass">&#10003; OK</span></td></tr>
+                    <tr><td><span class="test-name">test_static_files_served</span></td><td class="test-desc">Les fichiers statiques sont accessibles.</td><td><span class="status-badge status-pass">&#10003; OK</span></td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════════════ -->
+<!-- JOUR 10 — E2E + Ex&eacute;cution compl&egrave;te                           -->
+<!-- ═══════════════════════════════════════════════════════════════════════════ -->
+<section class="day-section day-10" id="jour-10">
+    <div class="day-header">
+        <div class="day-number">10</div>
+        <div class="day-info">
+            <h2>Tests E2E &mdash; Playwright + Ex&eacute;cution Compl&egrave;te</h2>
+            <div class="day-desc">Tests end-to-end avec navigateur r&eacute;el via Playwright + ex&eacute;cution compl&egrave;te de la suite</div>
+        </div>
+        <div class="day-tags">
+            <span class="tag tag-e2e">E2E</span>
+        </div>
+    </div>
+
+    <div class="file-card">
+        <div class="file-card-header">
+            <span class="file-path">tests/e2e/test_auth_flow.py</span>
+            <span class="test-count">Tests E2E (requiert playwright)</span>
+        </div>
+        <div class="file-card-body">
+            <div class="cmd-block">
+                <span class="prompt">$</span>
+                <span class="cmd">pip install pytest-playwright && playwright install chromium</span>
+                <button class="copy-btn" onclick="copyCmd(this)">Copier</button>
+            </div>
+            <div class="cmd-block">
+                <span class="prompt">$</span>
+                <span class="cmd">python -m pytest tests/e2e/test_auth_flow.py -v</span>
+                <button class="copy-btn" onclick="copyCmd(this)">Copier</button>
+            </div>
+            <table class="test-table">
+                <thead><tr><th>Test</th><th>Description</th><th>Statut</th></tr></thead>
+                <tbody>
+                    <tr><td><span class="test-name">test_login_flow</span></td><td class="test-desc">Flux complet de connexion via navigateur : saisie identifiants, soumission, v&eacute;rification page d'accueil.</td><td><span class="status-badge" style="background:#F1F5F9;color:var(--text-muted);">&#9432; Requis: playwright</span></td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="file-card" style="border-color: var(--accent); border-width: 2px;">
+        <div class="file-card-header" style="background:linear-gradient(to right,#FFFBEB,#FEF3C7);">
+            <span class="file-path" style="color:var(--accent);">Ex&eacute;cution compl&egrave;te de toute la suite</span>
+            <span class="test-count" style="border-color:var(--accent);color:var(--accent);">229 tests</span>
+        </div>
+        <div class="file-card-body">
+            <div class="cmd-block">
+                <span class="prompt">$</span>
+                <span class="cmd">python -m pytest tests/ -v --tb=short</span>
+                <button class="copy-btn" onclick="copyCmd(this)">Copier</button>
+            </div>
+            <div style="padding:16px 20px;font-size:0.88rem;color:var(--text-muted);">
+                <p style="margin-bottom:8px;"><strong>Options utiles :</strong></p>
+                <code style="display:block;background:#F1F5F9;padding:8px 12px;border-radius:6px;margin-bottom:4px;">python -m pytest tests/ -x --tb=short</code>
+                <small>&rarr; Arr&ecirc;te au premier &eacute;chec, traceback court</small><br><br>
+                <code style="display:block;background:#F1F5F9;padding:8px 12px;border-radius:6px;margin-bottom:4px;">python -m pytest tests/ -m "api or security" -v</code>
+                <small>&rarr; Uniquement les tests API et s&eacute;curit&eacute;</small><br><br>
+                <code style="display:block;background:#F1F5F9;padding:8px 12px;border-radius:6px;margin-bottom:4px;">python -m pytest tests/ --cov=. --cov-report=html</code>
+                <small>&rarr; Avec couverture de code</small><br><br>
+                <code style="display:block;background:#F1F5F9;padding:8px 12px;border-radius:6px;margin-bottom:4px;">python -m pytest tests/ --html=rapport.html --self-contained-html</code>
+                <small>&rarr; G&eacute;n&egrave;re un rapport HTML</small>
+            </div>
+        </div>
+    </div>
+</section>
+
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════════════ -->
+<!-- FOOTER                                                               -->
+<!-- ═══════════════════════════════════════════════════════════════════════════ -->
+<div class="footer">
+    <p>G&eacute;n&eacute;r&eacute; le 25 avril 2026 &mdash; Projet NouvelAir</p>
+    <p style="margin-top:4px;">Environnement : Python 3.12.4 | Django 4.2.30 | pytest 9.0.3 | pytest-django 4.12.0</p>
+</div>
+
+<script>
+function copyCmd(btn) {
+    const cmd = btn.parentElement.querySelector('.cmd').textContent;
+    navigator.clipboard.writeText(cmd).then(() => {
+        btn.textContent = 'Copi\u00e9 !';
+        setTimeout(() => btn.textContent = 'Copier', 1500);
+    });
+}
+</script>
+
+</body>
+</html>

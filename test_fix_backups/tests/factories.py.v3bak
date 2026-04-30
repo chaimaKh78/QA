@@ -1,0 +1,43 @@
+"""
+Factory Boy factories for NouvelAir project.
+"""
+
+import random
+from datetime import timedelta
+from decimal import Decimal
+
+import factory
+from factory.django import DjangoModelFactory
+from django.utils import timezone
+
+# ---------------------------------------------------------------------------
+# Promotions app
+# ---------------------------------------------------------------------------
+
+class PromotionFactory(DjangoModelFactory):
+    """Factory for promotions.Promotion — all required fields included."""
+
+    class Meta:
+        model = 'promotions.Promotion'
+
+    code = factory.Sequence(lambda n: "PROMO%d" % n)
+    name = factory.Sequence(lambda n: "Promotion %d" % n)
+    description = factory.Faker('text', max_nb_chars=300)
+    promo_type = factory.Iterator(['percentage', 'fixed', 'free_upgrade'])
+    discount_percentage = factory.LazyFunction(
+        lambda: round(random.uniform(5, 50), 2)
+    )
+    discount_amount = factory.LazyFunction(
+        lambda: Decimal(random.uniform(0, 100)).quantize(Decimal('0.01'))
+    )
+    start_date = factory.LazyFunction(
+        lambda: timezone.now() - timedelta(days=random.randint(1, 10))
+    )
+    end_date = factory.LazyFunction(
+        lambda: timezone.now() + timedelta(days=random.randint(10, 60))
+    )
+    max_uses = 100
+    current_uses = 0
+    min_purchase_amount = Decimal('0.00')
+    is_active = True
+    is_featured = False

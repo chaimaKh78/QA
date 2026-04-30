@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block title %}Mes Réservations - {{ site_name }}{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <h2 class="mb-4"><i class="fas fa-list me-2"></i>Mes Réservations</h2>
+
+    {% if bookings %}
+    <div class="row">
+        {% for booking in bookings %}
+        <div class="col-md-6 mb-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                    <h6 class="mb-0 text-nouvelair fw-bold">{{ booking.short_reference }}</h6>
+                    <span class="badge
+                        {% if booking.status == 'confirmed' %}bg-success
+                        {% elif booking.status == 'cancelled' %}bg-danger
+                        {% elif booking.status == 'pending' %}bg-warning
+                        {% elif booking.status == 'refunded' %}bg-secondary
+                        {% endif %}">
+                        {{ booking.get_status_display }}
+                    </span>
+                </div>
+                <div class="card-body">
+                    {% for passenger in booking.passengers.all|slice:":2" %}
+                    <p class="mb-1"><strong>{{ passenger.first_name }} {{ passenger.last_name }}</strong></p>
+                    <small class="text-muted d-block mb-2">
+                        {{ passenger.flight.flight_number }} -
+                        {{ passenger.flight.origin.code }} → {{ passenger.flight.destination.code }}
+                        ({{ passenger.flight.departure_time|date:"d/m/Y" }})
+                    </small>
+                    {% endfor %}
+                    {% if booking.passengers.count > 2 %}
+                    <small class="text-muted">+{{ booking.passengers.count|add:"-2" }} passager(s)</small>
+                    {% endif %}
+                    <hr>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <strong class="text-nouvelair fs-5">{{ booking.total_amount }} TND</strong>
+                        <a href="{% url 'bookings:detail' booking.reference %}" class="btn btn-sm btn-outline-nouvelair">
+                            Voir détails <i class="fas fa-arrow-right ms-1"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="text-center py-5">
+        <i class="fas fa-suitcase-rolling fa-3x text-muted mb-4"></i>
+        <h4>Aucune réservation</h4>
+        <p class="text-muted">Vous n'avez pas encore de réservation.</p>
+        <a href="{% url 'flights:home' %}" class="btn btn-nouvelair">
+            <i class="fas fa-search me-1"></i>Rechercher un vol
+        </a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

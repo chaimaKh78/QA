@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block title %}{{ promotion.name }} - {{ site_name }}{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-5 text-center">
+                    <div class="bg-warning bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width:100px;height:100px;">
+                        {% if promotion.promo_type == 'percentage' %}
+                        <span class="text-warning fw-bold display-4">-{{ promotion.discount_percentage }}%</span>
+                        {% elif promotion.promo_type == 'buy_one_get_one' %}
+                        <i class="fas fa-gift text-warning fa-3x"></i>
+                        {% elif promotion.promo_type == 'free_upgrade' %}
+                        <i class="fas fa-arrow-up text-warning fa-3x"></i>
+                        {% else %}
+                        <i class="fas fa-tag text-warning fa-3x"></i>
+                        {% endif %}
+                    </div>
+                    <h2 class="fw-bold mb-3">{{ promotion.name }}</h2>
+                    <p class="lead text-muted">{{ promotion.description }}</p>
+
+                    <div class="row justify-content-center mt-4 mb-4">
+                        <div class="col-md-4">
+                            <div class="card bg-light">
+                                <div class="card-body">
+                                    <small class="text-muted">Code Promo</small>
+                                    <h4 class="fw-bold text-nouvelair">{{ promotion.code }}</h4>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card bg-light">
+                                <div class="card-body">
+                                    <small class="text-muted">Valide jusqu'au</small>
+                                    <h6 class="fw-bold">{{ promotion.end_date|date:"d F Y" }}</h6>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card bg-light">
+                                <div class="card-body">
+                                    <small class="text-muted">Restant</small>
+                                    <h6 class="fw-bold">{{ promotion.remaining_uses }} utilisations</h6>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <a href="{% url 'flights:home' %}" class="btn btn-nouvelair btn-lg">
+                        <i class="fas fa-search me-2"></i>Rechercher un vol et profiter de l'offre
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block title %}Nos Destinations - {{ site_name }}{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="text-center mb-5">
+        <h1 class="fw-bold"><i class="fas fa-compass me-2"></i>Nos Destinations</h1>
+        <p class="text-muted">Explorez les plus belles destinations avec {{ site_name }}</p>
+    </div>
+
+    <!-- Filtrage par catégorie -->
+    <div class="d-flex justify-content-center flex-wrap gap-2 mb-5">
+        <button class="btn btn-outline-nouvelair btn-sm active" onclick="filterDestinations('all')">Toutes</button>
+        <button class="btn btn-outline-secondary btn-sm" onclick="filterDestinations('beach')"><i class="fas fa-umbrella-beach me-1"></i>Plages</button>
+        <button class="btn btn-outline-secondary btn-sm" onclick="filterDestinations('culture')"><i class="fas fa-landmark me-1"></i>Culture</button>
+        <button class="btn btn-outline-secondary btn-sm" onclick="filterDestinations('adventure')"><i class="fas fa-hiking me-1"></i>Aventure</button>
+        <button class="btn btn-outline-secondary btn-sm" onclick="filterDestinations('urban')"><i class="fas fa-city me-1"></i>Urbain</button>
+        <button class="btn btn-outline-secondary btn-sm" onclick="filterDestinations('nature')"><i class="fas fa-leaf me-1"></i>Nature</button>
+    </div>
+
+    <!-- Grille de destinations -->
+    <div class="row g-4" id="destinations-grid">
+        {% for destination in destinations %}
+        <div class="col-md-6 col-lg-4 destination-card" data-category="{{ destination.category }}">
+            <div class="card border-0 shadow-sm h-100 overflow-hidden">
+                {% if destination.image %}
+                <img src="{{ destination.image.url }}" class="card-img-top" alt="{{ destination.name }}" style="height: 200px; object-fit: cover;">
+                {% else %}
+                <div class="bg-nouvelair bg-opacity-10 d-flex align-items-center justify-content-center" style="height: 200px;">
+                    <i class="fas fa-map-marked-alt fa-3x text-nouvelair"></i>
+                </div>
+                {% endif %}
+                <div class="card-body">
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="badge bg-nouvelair">{{ destination.get_category_display }}</span>
+                        <span class="text-warning"><i class="fas fa-star"></i> {{ destination.rating }}</span>
+                    </div>
+                    <h5 class="card-title fw-bold">{{ destination.name }}</h5>
+                    <p class="card-text text-muted small">{{ destination.short_description|truncatewords:25 }}</p>
+                    {% if destination.airport %}
+                    <small class="text-muted"><i class="fas fa-plane me-1"></i>{{ destination.airport.city }} ({{ destination.airport.code }})</small>
+                    {% endif %}
+                </div>
+                <div class="card-footer bg-white border-top-0">
+                    <a href="{% url 'destinations:detail' destination.slug %}" class="btn btn-outline-nouvelair btn-sm w-100">
+                        <i class="fas fa-info-circle me-1"></i>Découvrir
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12 text-center py-5">
+            <i class="fas fa-map fa-3x text-muted mb-3"></i>
+            <h4>Aucune destination disponible</h4>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Pagination -->
+    {% if is_paginated %}
+    <nav class="mt-5">
+        <ul class="pagination justify-content-center">
+            {% if page_obj.has_previous %}
+            <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">&laquo;</a></li>
+            {% endif %}
+            {% for num in page_obj.paginator.page_range %}
+            <li class="page-item {% if page_obj.number == num %}active{% endif %}">
+                <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+            </li>
+            {% endfor %}
+            {% if page_obj.has_next %}
+            <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">&raquo;</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+</div>
+{% endblock %}

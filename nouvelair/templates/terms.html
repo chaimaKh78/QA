@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}Conditions Générales - {{ site_name }}{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <h1 class="mb-4">Conditions Générales de Vente</h1>
+            <div class="card">
+                <div class="card-body">
+                    <h5>Article 1 - Objet</h5>
+                    <p>Les présentes conditions générales régissent la réservation et l'achat de billets d'avion sur le site {{ site_name }}. Ce site est un projet de formation et ne propose pas de services commerciaux réels.</p>
+
+                    <h5>Article 2 - Réservation</h5>
+                    <p>La réservation est considérée comme confirmée après le paiement intégral du montant. Une référence de réservation unique est attribuée à chaque transaction.</p>
+
+                    <h5>Article 3 - Tarifs</h5>
+                    <p>Les prix affichés sont indiqués en Dinars Tunisiens (TND) et incluent la taxe. Les prix peuvent varier en fonction de la classe de voyage, de la disponibilité et des promotions en cours.</p>
+
+                    <h5>Article 4 - Annulation et Remboursement</h5>
+                    <p>L'annulation d'une réservation peut être effectuée depuis la section "Ma Réservation" du site. Les conditions de remboursement dépendent du type de billet acheté et du délai avant le départ.</p>
+
+                    <h5>Article 5 - Responsabilité</h5>
+                    <p>{{ site_name }} s'engage à fournir des informations précises sur les vols. Toutefois, les horaires sont susceptibles de modification. {{ site_name }} ne saurait être tenu responsable des retards ou annulations dus à des circonstances exceptionnelles.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

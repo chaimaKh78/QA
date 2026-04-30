@@ -1,0 +1,153 @@
+{% extends "base.html" %}
+
+{% block title %}Réservation - {{ site_name }}{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <!-- Progress bar -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <ul class="nav nav-pills justify-content-center booking-progress">
+                <li class="nav-item flex-fill text-center">
+                    <span class="nav-link active"><i class="fas fa-users me-1"></i>1. Passagers</span>
+                </li>
+                <li class="nav-item flex-fill text-center">
+                    <span class="nav-link"><i class="fas fa-envelope me-1"></i>2. Contact</span>
+                </li>
+                <li class="nav-item flex-fill text-center">
+                    <span class="nav-link"><i class="fas fa-credit-card me-1"></i>3. Paiement</span>
+                </li>
+                <li class="nav-item flex-fill text-center">
+                    <span class="nav-link"><i class="fas fa-check-circle me-1"></i>4. Confirmation</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <form method="post">
+                {% csrf_token %}
+
+                <!-- Passagers -->
+                <div class="card mb-4 border-0 shadow-sm">
+                    <div class="card-header bg-nouvelair text-white">
+                        <h5 class="mb-0"><i class="fas fa-users me-2"></i>Informations des Passagers</h5>
+                    </div>
+                    <div class="card-body">
+                        {% for form in passenger_forms %}
+                        <div class="mb-4 {% if not forloop.first %}pt-4 border-top{% endif %}">
+                            <h6 class="text-nouvelair mb-3">
+                                Passager {{ forloop.counter }}
+                                {% if forloop.first %}<span class="badge bg-success">Principal</span>{% endif %}
+                            </h6>
+                            <div class="row g-3">
+                                <div class="col-md-2">
+                                    <label class="form-label small">Titre</label>
+                                    {{ form.title }}
+                                </div>
+                                <div class="col-md-5">
+                                    <label class="form-label small">Prénom</label>
+                                    {{ form.first_name }}
+                                </div>
+                                <div class="col-md-5">
+                                    <label class="form-label small">Nom</label>
+                                    {{ form.last_name }}
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label small">Date de naissance</label>
+                                    {{ form.date_of_birth }}
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label small">Nationalité</label>
+                                    {{ form.nationality }}
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label small">Passeport</label>
+                                    {{ form.passport_number }}
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label small">Expiration passeport</label>
+                                    {{ form.passport_expiry }}
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-check mt-4">
+                                        {{ form.special_assistance }}
+                                        <label class="form-check-label small" for="{{ form.special_assistance.id_for_label }}">Assistance spéciale</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label small">Repas</label>
+                                    {{ form.meal_preference }}
+                                </div>
+                            </div>
+                            {% if form.errors %}
+                            <div class="alert alert-danger small mt-2">
+                                {% for field, errors in form.errors.items %}
+                                    {{ errors }}
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Contact -->
+                <div class="card mb-4 border-0 shadow-sm">
+                    <div class="card-header bg-nouvelair text-white">
+                        <h5 class="mb-0"><i class="fas fa-envelope me-2"></i>Coordonnées de Contact</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label">{{ contact_form.contact_email.label }}</label>
+                                {{ contact_form.contact_email }}
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">{{ contact_form.contact_phone.label }}</label>
+                                {{ contact_form.contact_phone }}
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">{{ contact_form.special_requests.label }}</label>
+                                {{ contact_form.special_requests }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bouton de soumission -->
+                <div class="d-flex justify-content-between">
+                    <a href="{% url 'flights:search_results' %}" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left me-1"></i>Retour aux résultats
+                    </a>
+                    <button type="submit" class="btn btn-nouvelair btn-lg">
+                        <i class="fas fa-lock me-2"></i>Confirmer et Payer
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Résumé -->
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm position-sticky" style="top: 80px;">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0"><i class="fas fa-receipt me-2"></i>Résumé</h5>
+                </div>
+                <div class="card-body">
+                    <p class="text-muted small">Passagers: <strong>{{ passengers_count }}</strong></p>
+                    <p class="text-muted small">Classe: <strong>{{ travel_class|title }}</strong></p>
+                    <hr>
+                    <h6 class="text-nouvelair">Conditions</h6>
+                    <ul class="list-unstyled small text-muted">
+                        <li><i class="fas fa-check text-success me-1"></i>Bagage cabine 10 kg</li>
+                        <li><i class="fas fa-check text-success me-1"></i>Repas inclus</li>
+                        <li><i class="fas fa-check text-success me-1"></i>Divertissement</li>
+                        <li><i class="fas fa-check text-success me-1"></i>Annulation modifiable</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

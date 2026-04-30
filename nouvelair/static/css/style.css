@@ -1,0 +1,285 @@
+/* ============================================
+   NouvelAir - Styles personnalisés
+   Application de Gestion des Réservations
+   ============================================ */
+
+/* Variables */
+:root {
+    --nouvelair-primary: #1a237e;
+    --nouvelair-secondary: #0d47a1;
+    --nouvelair-accent: #ff6f00;
+    --nouvelair-light: #e8eaf6;
+    --nouvelair-dark: #0a1441;
+    --nouvelair-success: #2e7d32;
+    --nouvelair-danger: #c62828;
+    --nouvelair-warning: #f57f17;
+}
+
+/* Body */
+body {
+    font-family: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
+    color: #333;
+    background-color: #f8f9fa;
+}
+
+/* Navbar personnalisée */
+.bg-nouvelair {
+    background: linear-gradient(135deg, var(--nouvelair-primary) 0%, var(--nouvelair-secondary) 100%) !important;
+}
+
+.navbar-brand {
+    font-weight: 700;
+    font-size: 1.5rem;
+    letter-spacing: 1px;
+}
+
+.navbar .nav-link {
+    font-weight: 500;
+    transition: all 0.3s ease;
+    padding: 0.5rem 1rem !important;
+}
+
+.navbar .nav-link:hover {
+    color: #ffc107 !important;
+    transform: translateY(-1px);
+}
+
+/* Bouton NouvelAir */
+.btn-nouvelair {
+    background: linear-gradient(135deg, var(--nouvelair-primary) 0%, var(--nouvelair-secondary) 100%);
+    color: white;
+    border: none;
+    font-weight: 600;
+    padding: 0.6rem 1.5rem;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.btn-nouvelair:hover {
+    background: linear-gradient(135deg, var(--nouvelair-dark) 0%, var(--nouvelair-primary) 100%);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 20px rgba(26, 35, 126, 0.4);
+}
+
+.btn-nouvelair:active {
+    transform: translateY(0);
+}
+
+.btn-outline-nouvelair {
+    border: 2px solid var(--nouvelair-primary);
+    color: var(--nouvelair-primary);
+    font-weight: 600;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.btn-outline-nouvelair:hover {
+    background: var(--nouvelair-primary);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 20px rgba(26, 35, 126, 0.3);
+}
+
+.text-nouvelair {
+    color: var(--nouvelair-primary) !important;
+}
+
+.bg-nouvelair {
+    background-color: var(--nouvelair-primary) !important;
+}
+
+.badge.bg-nouvelair {
+    background-color: var(--nouvelair-primary) !important;
+}
+
+/* Cartes */
+.card {
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.card-header {
+    border-bottom: none;
+    font-weight: 600;
+}
+
+/* Hero Section */
+.hero-section {
+    position: relative;
+}
+
+.search-card {
+    animation: slideUp 0.8s ease-out;
+}
+
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Formulaires */
+.form-select, .form-control {
+    border-radius: 8px;
+    border-color: #e0e0e0;
+    padding: 0.6rem 1rem;
+}
+
+.form-select:focus, .form-control:focus {
+    border-color: var(--nouvelair-primary);
+    box-shadow: 0 0 0 0.2rem rgba(26, 35, 126, 0.15);
+}
+
+.form-label {
+    font-weight: 500;
+    color: #555;
+    margin-bottom: 0.3rem;
+}
+
+/* Booking Progress */
+.booking-progress .nav-link {
+    border-radius: 30px;
+    margin: 0 5px;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.booking-progress .nav-link.active {
+    background: var(--nouvelair-primary);
+    color: white;
+}
+
+/* Flight Cards */
+.flight-card {
+    transition: all 0.3s ease;
+    border-radius: 12px !important;
+}
+
+.flight-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+}
+
+/* Footer */
+footer {
+    background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%) !important;
+}
+
+footer a:hover {
+    color: #ffc107 !important;
+}
+
+.social-links a {
+    font-size: 1.2rem;
+    transition: all 0.3s ease;
+}
+
+.social-links a:hover {
+    color: #ffc107 !important;
+    transform: translateY(-3px);
+}
+
+/* Breadcrumb */
+.breadcrumb {
+    background: transparent;
+    padding: 0;
+    margin: 0;
+}
+
+.breadcrumb-item a {
+    color: var(--nouvelair-primary);
+    text-decoration: none;
+}
+
+/* Alerts */
+.alert {
+    border-radius: 10px;
+    border: none;
+}
+
+/* Pagination */
+.pagination .page-link {
+    color: var(--nouvelair-primary);
+    border-radius: 8px;
+    margin: 0 3px;
+}
+
+.pagination .page-item.active .page-link {
+    background: var(--nouvelair-primary);
+    border-color: var(--nouvelair-primary);
+}
+
+/* Scrollbar personnalisée */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--nouvelair-primary);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--nouvelair-secondary);
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideInLeft {
+    from { opacity: 0; transform: translateX(-30px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slideInRight {
+    from { opacity: 0; transform: translateX(30px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+.animate-fade-in {
+    animation: fadeIn 0.5s ease-out;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .hero-section {
+        min-height: auto;
+        padding: 3rem 0;
+    }
+
+    .search-card {
+        margin-top: 2rem;
+    }
+
+    .navbar-brand {
+        font-size: 1.2rem;
+    }
+
+    .display-4 {
+        font-size: 1.8rem;
+    }
+
+    .btn-nouvelair {
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+    }
+}
+
+/* Print styles */
+@media print {
+    .navbar, footer, .btn, .breadcrumb {
+        display: none !important;
+    }
+
+    .card {
+        border: 1px solid #ddd !important;
+        box-shadow: none !important;
+    }
+}

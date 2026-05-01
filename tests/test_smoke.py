@@ -3,6 +3,7 @@ import pytest
 from django.test import TestCase
 
 
+@pytest.mark.smoke
 class TestSmoke(TestCase):
     """Basic smoke tests to confirm the test environment works."""
 

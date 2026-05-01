@@ -7,7 +7,8 @@ import os
 import sys
 import django
 import random
-from datetime import date, timedelta
+from datetime import date, timedelta, datetime, time
+from django.utils import timezone
 
 # Configuration Django
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'nouvelair.settings')
@@ -84,10 +85,12 @@ def create_flights():
         dest = Airport.objects.get(code=dest_code)
 
         for day_offset in range(0, 30, 2):  # Vols tous les 2 jours
-            departure = date.today() + timedelta(days=day_offset)
+            departure_date = date.today() + timedelta(days=day_offset)
             # 1 à 3 vols par jour par route
             for hour in [7, 12, 18][:random.randint(1, 3)]:
-                departure_time = departure.replace(hour=hour, minute=random.choice([0, 15, 30, 45]))
+                # Create timezone-aware datetime
+                naive_dt = datetime.combine(departure_date, time(hour=hour, minute=random.choice([0, 15, 30, 45])))
+                departure_time = timezone.make_aware(naive_dt)
                 duration_hours = random.uniform(1.5, 4.0)
                 arrival_time = departure_time + timedelta(hours=duration_hours)
 
@@ -95,6 +98,9 @@ def create_flights():
                 base_eco = random.uniform(180, 600)
                 base_biz = base_eco * random.uniform(2.2, 3.5)
 
+                # Ensure available seats don't go negative
+                max_eco_reduction = min(50, aircraft.economy_seats)
+                max_biz_reduction = min(10, aircraft.business_seats)
                 Flight.objects.get_or_create(
                     flight_number=f"BJ{flight_counter}",
                     defaults={
@@ -104,8 +110,8 @@ def create_flights():
                         'arrival_time': arrival_time,
                         'base_price_economy': round(base_eco, 2),
                         'base_price_business': round(base_biz, 2),
-                        'available_seats_economy': aircraft.economy_seats - random.randint(0, 50),
-                        'available_seats_business': aircraft.business_seats - random.randint(0, 10),
+                        'available_seats_economy': aircraft.economy_seats - random.randint(0, max_eco_reduction),
+                        'available_seats_business': aircraft.business_seats - random.randint(0, max_biz_reduction),
                         'status': 'scheduled',
                     }
                 )

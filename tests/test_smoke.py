@@ -23,3 +23,8 @@ class TestSmoke(TestCase):
         from django.db import connection
         connection.ensure_connection()
         self.assertTrue(connection.is_usable())
+
+    def test_flights_module_imported(self):
+        """Verify flights module can be imported."""
+        import flights.models
+        self.assertIsNotNone(flights.models)

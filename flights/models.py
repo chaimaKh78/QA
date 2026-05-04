@@ -140,14 +140,6 @@ class Flight(models.Model):
                 return '%dmin' % minutes
         return ''
 
-    def get_durations_display(self):
-        """Calcule et formate la durée du vol."""
-        delta = self.arrival_time - self.departure_time
-        total_minutes = int(delta.total_seconds() // 60)
-        hours = total_minutes // 60
-        minutes = total_minutes % 60
-        return f"{hours}h {minutes:02d}min"
-
     class Meta:
         verbose_name = "Vol"
         verbose_name_plural = "Vols"

@@ -47,7 +47,7 @@ def step_visitor_not_logged_in(context):
 # ── WHEN : Actions ───────────────────────────────────────────────────────────
 
 
-@when(r'j\'accède à la page "([^"]+)"')
+@when("j'accède à la page \"([^\"]+)\"")
 def step_access_page(context, url_name):
     """
     Accède à une page par son nom d'URL Django.
@@ -104,7 +104,7 @@ def step_redirected_to_page(context, url_name):
     )
 
 
-@then(r'un message d\'erreur est affiché')
+@then("un message d'erreur est affiché")
 def step_error_message_generic(context):
     """Vérifie qu'un message d'erreur est affiché sur la page."""
     content = context.response.content.decode("utf-8").lower()
@@ -122,7 +122,7 @@ def step_error_message_generic(context):
     )
 
 
-@then(r'un message d\'erreur contenant "([^"]+)" est affiché')
+@then("un message d'erreur contenant \"([^\"]+)\" est affiché")
 def step_error_message_contains(context, text):
     """Vérifie qu'un message d'erreur contenant un texte spécifique est affiché."""
     content = context.response.content.decode("utf-8").lower()

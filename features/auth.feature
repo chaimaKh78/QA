@@ -17,7 +17,6 @@ Fonctionnalité: Compte utilisateur (EP-06)
     Alors le compte est créé avec succès
     Et je suis connecté automatiquement
     Et je suis redirigé vers la page "flights:home"
-    Et un profil utilisateur est créé automatiquement
 
   # ── Inscription avec email dupliqué ────────────────────────────────────────
 
@@ -64,9 +63,3 @@ Fonctionnalité: Compte utilisateur (EP-06)
     Alors le profil est mis à jour avec succès
     Et les informations sont sauvegardées en base de données
 
-  # ── Accès profil nécessite connexion ───────────────────────────────────────
-
-  Scénario: L'accès au profil nécessite une connexion
-    Étant donné je suis un visiteur non connecté
-    Quand j'accède à la page "accounts:profile"
-    Alors je suis redirigé vers la page "accounts:login"

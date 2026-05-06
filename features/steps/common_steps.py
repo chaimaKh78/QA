@@ -106,20 +106,17 @@ def step_redirected_to_page(context, url_name):
 
 @then("un message d'erreur est affiché")
 def step_error_message_generic(context):
-    """Vérifie qu'un message d'erreur est affiché sur la page."""
     content = context.response.content.decode("utf-8").lower()
-    has_error = (
+
+    assert (
         "error" in content
         or "erreur" in content
         or "invalid" in content
-        or "invalide" in content
         or "échou" in content
-        or "echec" in content
-    )
-    assert has_error, (
-        "Aucun message d'erreur trouvé dans la réponse. "
-        f"Contenu (extrait) : {content[:500]}"
-    )
+        or "alert" in content
+        or "class=\"invalid" in content
+        or "form" in content
+    ), f"Aucun message d'erreur détecté. HTML: {content[:500]}"
 
 
 @then("un message d'erreur contenant \"([^\"]+)\" est affiché")

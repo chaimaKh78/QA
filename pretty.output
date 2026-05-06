@@ -1,25 +1,56 @@
-Fonctionnalité: Recherche de vols (EP-01) # features/search.feature:2
-  En tant que voyageur
-  Je veux rechercher des vols disponibles
-  Afin de planifier mon voyage avec NouvelAir
-  Fonctionnalité: Recherche de vols (EP-01)  # features/search.feature:2
+Fonctionnalité: Compte utilisateur (EP-06) # features/auth.feature:2
+  En tant que visiteur ou utilisateur
+  Je veux m'inscrire, me connecter et gérer mon profil
+  Afin de bénéficier des services personnalisés de NouvelAir
+  Fonctionnalité: Compte utilisateur (EP-06)  # features/auth.feature:2
 
-  Scénario: Les aéroports populaires sont affichés sur la page d'accueil  # features/search.feature:14
-    Étant donné que la base de données est peuplée                        # features/steps/common_steps.py:20
-    Étant donné que la base de données est peuplée                        # features/steps/common_steps.py:20
-    Quand j'accède à la page "flights:home"                               # features/steps/search_steps.py:332
-    Alors le statut de la réponse est 200                                 # features/steps/search_steps.py:382
-    Et je vois au moins 3 aéroports populaires                            # features/steps/search_steps.py:494
+  Scénario: Inscription avec des données valides           # features/auth.feature:12
+    Étant donné que la base de données est peuplée         # features/steps/common_steps.py:20
+    Étant donné je suis un visiteur non connecté           # features/steps/common_steps.py:41
+    Quand je m'inscris avec les données valides suivantes: # features/steps/auth_steps.py:21
+      | username | prenom | nom    | email              | mot_de_passe   | confirmation   |
+      | newuser  | Pierre | Martin | pierre@exemple.com | SecurePass123! | SecurePass123! |
+    Alors le compte est créé avec succès                   # features/steps/auth_steps.py:101
+    Et je suis connecté automatiquement                    # features/steps/auth_steps.py:106
+    Et je suis redirigé vers la page "flights:home"        # features/steps/auth_steps.py:135
 
-  Scénario: Le formulaire de recherche contient tous les champs nécessaires  # features/search.feature:20
-    Étant donné que la base de données est peuplée                           # features/steps/common_steps.py:20
-    Étant donné que la base de données est peuplée                           # features/steps/common_steps.py:20
-    Quand j'accède à la page "flights:home"                                  # features/steps/search_steps.py:332
-    Alors le statut de la réponse est 200                                    # features/steps/search_steps.py:382
-    Et le formulaire de recherche contient le champ "origin"                 # features/steps/search_steps.py:507
-    Et le formulaire de recherche contient le champ "destination"            # features/steps/search_steps.py:507
-    Et le formulaire de recherche contient le champ "departure_date"         # features/steps/search_steps.py:507
-    Et le formulaire de recherche contient le champ "passengers"             # features/steps/search_steps.py:507
-    Et le formulaire de recherche contient le champ "travel_class"           # features/steps/search_steps.py:507
-    Et le formulaire de recherche contient le champ "trip_type"              # features/steps/search_steps.py:507
+  Scénario: Inscription avec un email déjà utilisé affiche une erreur      # features/auth.feature:23
+    Étant donné que la base de données est peuplée                         # features/steps/common_steps.py:20
+    Étant donné je suis un visiteur non connecté                           # features/steps/common_steps.py:41
+    Quand je m'inscris avec les données suivantes ayant un email dupliqué: # features/steps/auth_steps.py:38
+      | username  | prenom | nom   | email            | mot_de_passe   | confirmation   |
+      | otheruser | Marie  | Curie | test@example.com | SecurePass123! | SecurePass123! |
+    Alors le compte n'est pas créé                                         # features/steps/auth_steps.py:111
+    Et un message d'erreur contenant "email" est affiché                   # features/steps/search_steps.py:451
+
+  Scénario: Connexion avec des identifiants valides            # features/auth.feature:33
+    Étant donné que la base de données est peuplée             # features/steps/common_steps.py:20
+    Étant donné je suis un visiteur non connecté               # features/steps/common_steps.py:41
+    Quand je me connecte avec "testuser" et "TestPassword123!" # features/steps/auth_steps.py:59
+    Alors je suis connecté avec succès                         # features/steps/auth_steps.py:116
+    Et je suis redirigé vers la page "flights:home"            # features/steps/auth_steps.py:135
+
+  Scénario: Connexion échouée avec un mauvais mot de passe  # features/auth.feature:41
+    Étant donné que la base de données est peuplée          # features/steps/common_steps.py:20
+    Étant donné je suis un visiteur non connecté            # features/steps/common_steps.py:41
+    Quand je me connecte avec "testuser" et "wrongpass"     # features/steps/auth_steps.py:59
+    Alors je ne suis pas connecté                           # features/steps/auth_steps.py:121
+    Et un message d'erreur est affiché                      # features/steps/common_steps.py:107
+    Et je reste sur la page "accounts:login"                # features/steps/auth_steps.py:140
+
+  Scénario: Déconnexion d'un utilisateur connecté                                               # features/auth.feature:50
+    Étant donné que la base de données est peuplée                                              # features/steps/common_steps.py:20
+    Étant donné je suis connecté en tant que "testuser" avec le mot de passe "TestPassword123!" # features/steps/auth_steps.py:10
+    Quand je me déconnecte                                                                      # features/steps/auth_steps.py:71
+    Alors je suis déconnecté                                                                    # features/steps/auth_steps.py:126
+    Et je suis redirigé vers la page "flights:home"                                             # features/steps/auth_steps.py:135
+
+  Scénario: Mise à jour du profil utilisateur                                                   # features/auth.feature:58
+    Étant donné que la base de données est peuplée                                              # features/steps/common_steps.py:20
+    Étant donné je suis connecté en tant que "testuser" avec le mot de passe "TestPassword123!" # features/steps/auth_steps.py:10
+    Quand je mets à jour mon profil avec les données suivantes:                                 # features/steps/auth_steps.py:80
+      | prenom      | nom       | email                | telephone    | ville  | pays    |
+      | JeanModifié | DupontMod | modified@exemple.com | +21698765432 | Sousse | Tunisie |
+    Alors le profil est mis à jour avec succès                                                  # features/steps/auth_steps.py:149
+    Et les informations sont sauvegardées en base de données                                    # features/steps/auth_steps.py:154
 

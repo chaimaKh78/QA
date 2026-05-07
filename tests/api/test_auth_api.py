@@ -1,5 +1,4 @@
-﻿\
-"""
+﻿"""
 Tests API - Authentification (Jour 5).
 
 Teste les endpoints liés à l'authentification:

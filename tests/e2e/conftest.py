@@ -30,7 +30,7 @@ def pytest_configure(config):
 
 # ── Fixtures de base ─────────────────────────────────────────────────────────
 
-@pytest.fixture(scope="function")
+@pytest.fixture(scope="session")
 def base_url():
     """
     URL de base de l'application NouvelAir.
@@ -159,3 +159,12 @@ def pytest_runtest_makereport(item, call):
     outcome = yield
     rep = outcome.get_result()
     setattr(item, f"rep_{rep.when}", rep)
+
+@pytest.fixture(scope="function")
+def browser_context_args(browser_context_args):
+    return {
+        **browser_context_args,
+        "base_url": "http://127.0.0.1:8000",
+        "viewport": {"width": 1280, "height": 720},
+        "record_video_dir": "reports/videos/",
+    }

@@ -245,21 +245,20 @@ class TestSearchFlow:
             f"La recherche avec 3 passagers n'a pas abouti. URL: {page.url}"
         )
 
+    def test_search_form_submit(self, page: Page, base_url: str):
+        """US-001 : L'utilisateur peut rechercher un vol aller-retour."""
+        home = HomePage(page, base_url)
+        home.navigate(home.url)
+        home.wait_for_selector("form", timeout=5000)
 
-def test_search_form_submit(page: Page, base_url: str):
-    """US-001 : L'utilisateur peut rechercher un vol aller-retour."""
-    home = HomePage(page, base_url)
-    home.navigate(home.url)
-    home.wait_for_selector("form", timeout=5000)
+        home.select_origin("TUN")
+        home.select_destination("CDG")
+        home.set_departure_date(_future_date(30))
+        home.submit_search()
 
-    home.select_origin("TUN")
-    home.select_destination("CDG")
-    home.set_departure_date(_future_date(30))
-    home.submit_search()
+        page.wait_for_load_state("domcontentloaded")
 
-    page.wait_for_load_state("domcontentloaded")
-
-    results = SearchResultsPage(page, base_url)
-    assert "/search/" in page.url or "/recherche/" in page.url or results.has_results() or results.get_no_results_message(), (
-        f"La recherche n'a pas redirigé vers la page de résultats. URL: {page.url}"
-    )
+        results = SearchResultsPage(page, base_url)
+        assert "/search/" in page.url or "/recherche/" in page.url or results.has_results() or results.get_no_results_message(), (
+            f"La recherche n'a pas redirigé vers la page de résultats. URL: {page.url}"
+        )

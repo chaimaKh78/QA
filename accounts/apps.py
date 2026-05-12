@@ -11,4 +11,4 @@ class AccountsConfig(AppConfig):
     verbose_name = 'Comptes'
 
     def ready(self):
-        import accounts.signals
+        import accounts.signals  # noqa: F401

@@ -2,12 +2,11 @@
 Vues de l'application Promotions.
 """
 
-from django.shortcuts import render
-from django.views.generic import ListView, DetailView
 from django.utils import timezone
 from django.http import JsonResponse
 from django.views import View
-from django.contrib import messages
+from django.views.generic import DetailView, ListView
+
 from .models import Promotion, NewsletterSubscription
 
 

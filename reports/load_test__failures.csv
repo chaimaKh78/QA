@@ -1,1 +1,2 @@
 Method,Name,Error,Occurrences
+GET,/flights/aeroports/,HTTPError('404 Client Error: Not Found for url: /flights/aeroports/'),2150

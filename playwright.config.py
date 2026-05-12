@@ -20,6 +20,8 @@ BASE_URL = os.environ.get("NOUVELAIR_BASE_URL", "http://127.0.0.1:8000")
 # ── Configuration du serveur de développement ─────────────────────────────────
 
 # Configuration pour pytest-playwright
+
+
 def pytest_configure(config):
     """
     Configure les paramètres Playwright pour les tests pytest.

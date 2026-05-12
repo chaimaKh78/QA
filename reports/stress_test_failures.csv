@@ -1,0 +1,10 @@
+Method,Name,Error,Occurrences
+GET,/accounts/inscription/,HTTPError('500 Server Error: Internal Server Error for url: /accounts/inscription/'),1
+POST,/accounts/connexion/ [POST],HTTPError('500 Server Error: Internal Server Error for url: /accounts/connexion/ [POST]'),523
+POST,/accounts/connexion/ [POST],HTTPError('403 Client Error: Forbidden for url: /accounts/connexion/ [POST]'),39
+GET,/flights/aeroports/,HTTPError('404 Client Error: Not Found for url: /flights/aeroports/'),3868
+GET,/accounts/connexion/ [GET],"ConnectionRefusedError(10061, '[WinError 10061] Aucune connexion n’a pu être établie car l’ordinateur cible l’a expressément refusée.')",39
+GET,/ [Homepage],CatchResponseError('Status code: 500'),4
+GET,/promotions/,CatchResponseError('Status code: 500'),2
+POST,/accounts/connexion/ [POST],HTTPError('400 Client Error: Bad Request for url: /accounts/connexion/ [POST]'),32
+GET,/destinations/,CatchResponseError('Status code: 500'),2

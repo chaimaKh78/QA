@@ -17,7 +17,7 @@ Exécution:
     locust -f tests/performance/locustfile.py --host=http://127.0.0.1:8000            --headless -u 50 -r 5 -t 5m --html=reports/performance/load_test.html
 """
 
-from locust import HttpUser, task, between, events
+from locust import HttpUser, task, between, events, LoadTestShape
 from locust.runners import MasterRunner
 import json
 import logging
@@ -211,6 +211,29 @@ class BookingBehavior:
         self.client.get("/mentions-legales/", name="/mentions-legales/")
         self.client.get("/conditions-generales/", name="/conditions-generales/")
 
+class StressTestShape(LoadTestShape):
+    """
+    Shape en escalier : paliers successifs de 2 minutes.
+    On cherche à identifier le palier où le P95 dépasse le SLO.
+
+    Paliers : 50 → 100 → 200 → 300 → 500 → 750 → 1000 users
+    """
+    stages = [
+        {'duration': 60,  'users': 50,   'spawn_rate': 10},  # Palier 1 : nominale
+        {'duration': 180, 'users': 100,  'spawn_rate': 10},  # Palier 2 : load normal
+        {'duration': 300, 'users': 200,  'spawn_rate': 20},  # Palier 3 : charge élevée
+        {'duration': 420, 'users': 300,  'spawn_rate': 20},  # Palier 4 : surcharge
+        {'duration': 540, 'users': 500,  'spawn_rate': 50},  # Palier 5 : stress fort
+        {'duration': 660, 'users': 750,  'spawn_rate': 50},  # Palier 6 : stress extrême
+        {'duration': 780, 'users': 1000, 'spawn_rate': 100}, # Palier 7 : rupture
+    ]
+
+    def tick(self):
+        run_time = self.get_run_time()
+        for stage in self.stages:
+            if run_time < stage['duration']:
+                return stage['users'], stage['spawn_rate']
+        return None
 
 # ── Utilisateur Locust principal ─────────────────────────────────────────────
 

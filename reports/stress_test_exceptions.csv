@@ -1,11 +1,11 @@
 Count,Message,Traceback,Nodes
-1074,'SearchingBehavior' object has no attribute 'airport_autocomplete_par',"  File ""D:\NouvelairApp\nouvelair_project\venv\Lib\site-packages\locust\user\task.py"", line 363, in run
+1934,'SearchingBehavior' object has no attribute 'airport_autocomplete_par',"  File ""D:\NouvelairApp\nouvelair_project\venv\Lib\site-packages\locust\user\task.py"", line 363, in run
     self.execute_next_task()
   File ""D:\NouvelairApp\nouvelair_project\venv\Lib\site-packages\locust\user\task.py"", line 396, in execute_next_task
     self.execute_task(self._task_queue.popleft())
   File ""D:\NouvelairApp\nouvelair_project\venv\Lib\site-packages\locust\user\task.py"", line 513, in execute_task
     task(self.user)
-  File ""D:\NouvelairApp\nouvelair_project\tests\performance\locustfile.py"", line 360, in airport_autocomplete_par
+  File ""D:\NouvelairApp\nouvelair_project\tests\performance\locustfile.py"", line 383, in airport_autocomplete_par
     self.searching.airport_autocomplete_par()
     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 ",local

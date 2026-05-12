@@ -4,13 +4,14 @@ Agence de Voyage inspirée de nouvelair.com
 """
 
 from pathlib import Path
-import os
-from datetime import timedelta
+
+from django.urls import reverse_lazy
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
+
 SECRET_KEY = 'django-insecure-nouvelair-dev-key-change-in-production-!@#$%^&*()'
 
 # SECURITY WARNING: don't run with debug turned on in production!
@@ -109,10 +110,11 @@ CRISPY_ALLOWED_TEMPLATE_PACKS = 'bootstrap5'
 CRISPY_TEMPLATE_PACK = 'bootstrap5'
 
 # Auth
-from django.urls import reverse_lazy
-
 LOGIN_URL = reverse_lazy('accounts:login')
+
 LOGIN_REDIRECT_URL = '/'
+
+
 LOGOUT_REDIRECT_URL = '/'
 
 # Sessions

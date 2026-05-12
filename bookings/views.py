@@ -3,13 +3,15 @@ Vues de l'application Bookings.
 """
 
 from django.shortcuts import render, get_object_or_404, redirect
-from django.views.generic import DetailView, ListView, View, TemplateView
+from django.views.generic import DetailView, ListView, View
+
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
-from django.urls import reverse
+
 from django.db import transaction
-from .models import Booking, Passenger, Payment
-from .forms import PassengerForm, ContactInfoForm, PaymentForm
+from .models import Booking, Payment
+
+from .forms import PassengerForm, ContactInfoForm
 
 
 class BookingCreateView(View):

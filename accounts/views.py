@@ -3,12 +3,12 @@ Vues de l'application Accounts.
 """
 
 from django.shortcuts import render, redirect
-from django.views.generic import View, TemplateView, UpdateView
+from django.views.generic import View
+
 from django.contrib.auth import login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
-from django.urls import reverse
-from django.contrib.auth.models import User
+
 from .models import UserProfile
 from .forms import CustomUserCreationForm, CustomAuthenticationForm, UserProfileForm, UserForm
 

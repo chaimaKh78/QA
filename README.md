@@ -1,6 +1,6 @@
 # 🛫 NouvelAir — Portfolio QA & Automatisation des Tests
 
-![CI Pipeline](https://img.shields.io/github/actions/workflow/status/nouvelair/nouvelair_project/tests.yml?branch=main&style=flat-square&label=CI)
+![CI Pipeline](https://img.shields.io/github/actions/workflow/status/nouvelair/nouvelair_project/tests.yml?branch=master&style=flat-square&label=CI)
 ![Coverage](https://img.shields.io/badge/Coverage-83%25-brightgreen?style=flat-square)
 ![Security](https://img.shields.io/badge/Security-0%20HIGH-green?style=flat-square)
 ![Python](https://img.shields.io/badge/Python-3.12-blue?style=flat-square&logo=python)
@@ -347,8 +347,8 @@ Le projet utilise **GitHub Actions** avec un pipeline de **8 jobs** enchaînés 
 
 ### ⚡ Déclencheurs
 
-- **Push** sur `main`, `sprint1`, `sprint2`
-- **Pull Request** vers `main`
+- **Push** sur `master`, `sprint1`, `sprint2`
+- **Pull Request** vers `master`
 
 ### 🔧 Configuration SonarQube
 

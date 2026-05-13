@@ -6,9 +6,9 @@ name: NouvelAir QA Pipeline
 # ── Déclencheurs ──────────────────────────────────────────────
 on:
   push:
-    branches: [ main, sprint1, sprint2 ]
+    branches: [ master, sprint1, sprint2 ]
   pull_request:
-    branches: [ main ]
+    branches: [ master ]
   workflow_dispatch:   # Déclenchement manuel depuis GitHub UI
  
 # ── Variables d'environnement globales ───────────────────────

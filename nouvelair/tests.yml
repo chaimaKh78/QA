@@ -1,0 +1,210 @@
+# .github/workflows/tests.yml
+# Pipeline CI/CD complet NouvelAir — 7 jobs en séquence
+ 
+name: NouvelAir QA Pipeline
+ 
+# ── Déclencheurs ──────────────────────────────────────────────
+on:
+  push:
+    branches: [ main, sprint1, sprint2 ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:   # Déclenchement manuel depuis GitHub UI
+ 
+# ── Variables d'environnement globales ───────────────────────
+env:
+  DJANGO_SETTINGS_MODULE: nouvellair.settings
+  DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
+  PYTHON_VERSION: "3.12"
+ 
+# ── Jobs ─────────────────────────────────────────────────────
+jobs:
+ 
+  # ── Job 1 : Lint ─────────────────────────────────────────
+  lint:
+    name: "Job 1 — Lint (flake8 + pylint)"
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+ 
+      - name: Setup Python ${{ env.PYTHON_VERSION }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: "pip"
+ 
+      - name: Install dependencies
+        run: pip install -r requirements.txt flake8 pylint
+ 
+      - name: Run flake8
+        run: flake8 . --max-line-length=120 --exclude=migrations,venv,.git
+ 
+      - name: Run pylint
+        run: |
+          pylint flights bookings accounts destinations promotions \
+            --disable=C0114,C0115,C0116 --fail-under=7.0
+  # ── Job 2 : Tests Unitaires ──────────────────────────────
+  unit-tests:
+    name: "Job 2 — Tests Unitaires (pytest)"
+    runs-on: ubuntu-24.04
+    needs: [lint]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: "pip"
+      - run: pip install -r requirements.txt
+      - run: python manage.py migrate --run-syncdb
+      - run: python manage.py populate_data
+ 
+      - name: Run unit tests with coverage
+        run: |
+          pytest tests/unit/ -v \
+            --cov=flights --cov=bookings --cov=accounts \
+            --cov-report=html:reports/coverage \
+            --cov-report=term-missing \
+            --cov-fail-under=80 \
+            --html=reports/unit_report.html --self-contained-html
+ 
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: coverage-report
+          path: reports/coverage/
+ 
+  # ── Job 3 : Tests d'Intégration ──────────────────────────
+  integration-tests:
+    name: "Job 3 — Tests Intégration (Django)"
+    runs-on: ubuntu-24.04
+    needs: [unit-tests]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: "pip"
+      - run: pip install -r requirements.txt
+      - run: python manage.py migrate --run-syncdb
+      - run: python manage.py populate_data
+      - name: Run integration tests
+        run: |
+          pytest tests/integration/ -v -m integration \
+            --html=reports/integration_report.html --self-contained-html
+ 
+  # ── Job 4 : BDD behave ────────────────────────────────────
+  bdd-tests:
+    name: "Job 4 — BDD Gherkin (behave)"
+    runs-on: ubuntu-24.04
+    needs: [integration-tests]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: "pip"
+      - run: pip install -r requirements.txt behave behave-django
+      - run: python manage.py migrate --run-syncdb
+      - run: python manage.py populate_data
+      - name: Run BDD scenarios
+        run: |
+          python manage.py runserver &
+          sleep 3
+          behave --tags=sprint1,sprint2 --no-capture \
+            --format=json -o reports/behave_results.json
+  # ── Job 5 : Playwright E2E ────────────────────────────────
+  e2e-tests:
+    name: "Job 5 — E2E Playwright (Chromium headless)"
+    runs-on: ubuntu-24.04
+    needs: [bdd-tests]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: "pip"
+      - run: pip install -r requirements.txt playwright pytest-playwright
+      - run: playwright install chromium --with-deps
+      - run: python manage.py migrate --run-syncdb
+      - run: python manage.py populate_data
+      - name: Start Django server
+        run: python manage.py runserver &
+      - run: sleep 3
+      - name: Run E2E tests
+        run: |
+          pytest tests/e2e/ -v \
+            --browser chromium \
+            --screenshot=only-on-failure \
+            --html=reports/e2e_report.html --self-contained-html
+ 
+      - name: Upload E2E screenshots on failure
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: e2e-screenshots
+          path: reports/playwright/
+ 
+  # ── Job 6 : Performance Locust (light) ───────────────────
+  performance-tests:
+    name: "Job 6 — Performance Locust (10 users, 60s)"
+    runs-on: ubuntu-24.04
+    needs: [e2e-tests]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: "pip"
+      - run: pip install -r requirements.txt locust
+      - run: python manage.py migrate --run-syncdb
+      - run: python manage.py populate_data
+      - name: Start server and run load test
+        run: |
+          python manage.py runserver &
+          sleep 3
+          locust -f tests/performance/locustfile.py \
+            --headless -u 10 -r 2 -t 60s \
+            --host http://127.0.0.1:8000 \
+            --html reports/locust_ci.html \
+            --csv reports/locust_ci
+ 
+      - name: Check performance gate (latence < 3s)
+        run: |
+          python tests/performance/check_perf_gate.py \
+            reports/locust_ci_stats.csv 3000
+ 
+  # ── Job 7 : Sécurité ─────────────────────────────────────
+  security:
+    name: "Job 7 — Sécurité (bandit + safety)"
+    runs-on: ubuntu-24.04
+    needs: [performance-tests]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: "pip"
+      - run: pip install bandit safety
+ 
+      - name: Run bandit security scan
+        run: |
+          bandit -r flights bookings accounts destinations promotions \
+            -f html -o reports/security_report.html \
+            --severity-level medium || true
+ 
+      - name: Run bandit — gate HIGH uniquement
+        run: |
+          bandit -r flights bookings accounts destinations promotions \
+            --severity-level high --exit-zero
+ 
+      - name: Check CVE with safety
+        run: safety check -r requirements.txt --full-report
+ 
+      - name: Upload security report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: security-report
+          path: reports/security_report.html

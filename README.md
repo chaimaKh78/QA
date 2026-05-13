@@ -432,10 +432,6 @@ Projet éducatif — Formation **Test/QA, Automatisation et Intelligence Artific
 
 ---
 
-<div align="center">
-
 ⭐ **Si ce portfolio vous a été utile, n'hésitez pas à laisser une étoile !** ⭐
 
 *Fait avec 🧪 pytest, 🎭 Playwright, 🥒 Behave, 🦗 Locust et 🤖 Claude*
-
-</div>

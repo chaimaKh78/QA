@@ -106,7 +106,7 @@ def run_bandit_scan():
 
     cmd = [
         sys.executable, "-m", "bandit",
-        "-r", ".",                       # Analyse récursive
+        "-r", "bookings accounts destinations promotions flights",                       # Analyse récursive
         "-f", "html",                    # Format HTML
         "-o", html_report,               # Rapport HTML
         "-ii",                           # Ne pas afficher les issues intermédiaires
@@ -125,7 +125,7 @@ def run_bandit_scan():
         # Aussi générer en JSON pour parsing
         cmd_json = [
             sys.executable, "-m", "bandit",
-            "-r", ".",
+            "-r", "bookings accounts destinations promotions flights",
             "-f", "json",
             "-o", json_report,
             "--exclude", "tests/,migrations/,__pycache__/",

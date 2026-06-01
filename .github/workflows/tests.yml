@@ -279,6 +279,7 @@ jobs:
           pip install -r requirements.txt
           pip install -r requirements_test.txt
           pip install pytest-playwright
+          python -m pip install Pillow
 
       - name: Installation des navigateurs Playwright
         run: playwright install chromium --with-deps

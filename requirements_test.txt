@@ -34,8 +34,8 @@ allure-pytest>=2.13,<3.0
 
 # --- Tests E2E ---
 playwright>=1.44,<2.0
-pixelmatch>=0.22,<1.0
-axe-playwright-python>=2.2,<3.0
+pixelmatch==0.4.0
+axe-playwright-python==0.1.7
 
 # --- Clients HTTP ---
 requests>=2.31,<3.0

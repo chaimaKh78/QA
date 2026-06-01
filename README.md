@@ -423,15 +423,14 @@ Formation de **10 jours** organisée en **2 sprints Agile** :
 - **Mesurer et améliorer la qualité** grâce à des métriques objectives (couverture, dette technique SonarQube, 0 vulnérabilité HIGH)
 
 ---
+## ⚠️ Project Status & Technical Notes
 
-## 📜 Licence
+This repository serves as an **educational portfolio** and a **proof of concept (PoC)**. It was built to demonstrate my capacity to architect a complex, multi-stage QA framework, rather than to maintain a live production system.
 
-Projet éducatif — Formation **Test/QA, Automatisation et Intelligence Artificielle**
+### 🔍 Current Limitations:
+* **CI/CD Pipelines:** The GitHub Actions workflow architecture is fully configured to show the theoretical structure (8 jobs). However, it may fail during execution due to missing environment variables, private API tokens, or external infrastructure access.
+* **Test Metrics:** The metrics mentioned in the documentation represent target milestones and test coverage structures planned during design, rather than a real-time production run.
+* **Dynamic Content:** Some UI tests might break over time due to updates and changes on the live NouvelAir website.
 
-© 2026 — Tous droits réservés pour usage pédagogique uniquement.
 
----
 
-⭐ **Si ce portfolio vous a été utile, n'hésitez pas à laisser une étoile !** ⭐
-
-*Fait avec 🧪 pytest, 🎭 Playwright, 🥒 Behave, 🦗 Locust et 🤖 Claude*

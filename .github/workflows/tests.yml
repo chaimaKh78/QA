@@ -283,6 +283,12 @@ jobs:
       - name: Installation des navigateurs Playwright
         run: playwright install chromium --with-deps
 
+      - name: Démarrer Django
+        run: |
+          python manage.py migrate
+          python manage.py runserver 127.0.0.1:8000 &
+          sleep 10
+
       - name: Exécution des tests E2E
         env:
           DJANGO_SETTINGS_MODULE: nouvelair.settings

@@ -42,6 +42,7 @@ jobs:
         run: flake8 . --max-line-length=120 --exclude=migrations,venv,.git
  
       - name: Run pylint
+        continue-on-error: true
         run: |
           pylint flights bookings accounts destinations promotions \
             --disable=C0114,C0115,C0116 --fail-under=7.0

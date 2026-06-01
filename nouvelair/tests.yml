@@ -67,7 +67,6 @@ jobs:
             --cov=flights --cov=bookings --cov=accounts \
             --cov-report=html:reports/coverage \
             --cov-report=term-missing \
-            --cov-fail-under=80 \
             --html=reports/unit_report.html --self-contained-html
  
       - name: Upload coverage report

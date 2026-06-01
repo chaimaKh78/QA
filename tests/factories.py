@@ -10,6 +10,7 @@ from django.utils import timezone
 class AirportFactory(DjangoModelFactory):
     class Meta:
         model = 'flights.Airport'
+        django_get_or_create = ('code',)
 
     code = factory.Sequence(lambda n: 'T%03d' % n)
     name = factory.Sequence(lambda n: 'Aeroport Test %d' % n)

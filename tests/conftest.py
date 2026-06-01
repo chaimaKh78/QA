@@ -165,7 +165,7 @@ def authenticated_client(db):
         defaults={
             "phone": "+216 22 345 678",
             "city": "Tunis",
-            "country": "Tunisie",
+            "country": "Tunisia",
             "nationality": "Tunisienne",
             "date_of_birth": date(1990, 5, 15),
             "gender": "M",
@@ -190,18 +190,15 @@ def sample_airport(db):
     Returns:
         Airport: Instance de l'aeroport TUN.
     """
-    airport, _ = Airport.objects.get_or_create(
+    return Airport.objects.create(
         code="TUN",
-        defaults={
-            "name": "Aeroport International Tunis-Carthage",
-            "city": "Tunis",
-            "country": "Tunisie",
-            "latitude": 36.851000,
-            "longitude": 10.227000,
-            "is_active": True,
-        },
+        name="Aeroport International Tunis-Carthage",
+        city="Tunis",
+        country="Tunisie",
+        latitude=36.851000,
+        longitude=10.227000,
+        is_active=True,
     )
-    return airport
 
 
 @pytest.fixture

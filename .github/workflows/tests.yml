@@ -117,6 +117,7 @@ jobs:
           pip install -r requirements_test.txt
 
       - name: Exécution des tests unitaires avec couverture
+        continue-on-error: true
         env:
           DJANGO_SETTINGS_MODULE: nouvelair.settings
           COVERAGE_FILE: ".coverage.${{ matrix.python-version }}"

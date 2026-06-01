@@ -190,15 +190,18 @@ def sample_airport(db):
     Returns:
         Airport: Instance de l'aeroport TUN.
     """
-    return Airport.objects.create(
+    airport, _ = Airport.objects.get_or_create(
         code="TUN",
-        name="Aeroport International Tunis-Carthage",
-        city="Tunis",
-        country="Tunisie",
-        latitude=36.851000,
-        longitude=10.227000,
-        is_active=True,
+        defaults={
+            "name": "Aeroport International Tunis-Carthage",
+            "city": "Tunis",
+            "country": "Tunisie",
+            "latitude": 36.851000,
+            "longitude": 10.227000,
+            "is_active": True,
+        },
     )
+    return airport
 
 
 @pytest.fixture
